@@ -1,0 +1,31 @@
+// Database Configuration - Sequelize ORM
+// CHGOURI CAR Marrakech Car Rental
+
+const { Sequelize } = require('sequelize');
+require('dotenv').config();
+
+const dbHost = process.env.DB_HOST || 'localhost';
+const dbPort = process.env.DB_PORT || 3306;
+const dbName = process.env.DB_NAME || 'chgouri_db';
+const dbUser = process.env.DB_USER || 'root';
+const dbPass = process.env.DB_PASS || '';
+const dbLogging = process.env.DB_LOGGING === 'true' ? console.log : false;
+
+const sequelize = new Sequelize(dbName, dbUser, dbPass, {
+  host: dbHost,
+  port: dbPort,
+  dialect: 'mysql',
+  logging: dbLogging,
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  },
+  define: {
+    timestamps: true,
+    underscored: true // maps camelCase fields in Sequelize models to snake_case in tables
+  }
+});
+
+module.exports = sequelize;
