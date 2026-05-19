@@ -110,7 +110,7 @@ exports.createCar = async (req, res) => {
 
     let finalImageUrl = imageUrl || '';
     if (req.files && req.files.length > 0) {
-      const fileUrls = req.files.map(file => `/uploads/${file.filename}`);
+      const fileUrls = req.files.map(file => file.path);
       finalImageUrl = JSON.stringify(fileUrls);
     }
 
@@ -169,7 +169,7 @@ exports.updateCar = async (req, res) => {
 
     let finalImageUrl = imageUrl;
     if (req.files && req.files.length > 0) {
-      const fileUrls = req.files.map(file => `/uploads/${file.filename}`);
+      const fileUrls = req.files.map(file => file.path);
       finalImageUrl = JSON.stringify(fileUrls);
     }
 

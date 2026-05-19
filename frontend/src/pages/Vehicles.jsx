@@ -6,33 +6,14 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { API_BASE_URL } from '../context/AuthContext';
+import { normalizeImages } from '../utils/imageHelper';
 import { ChevronLeft, ChevronRight, Check, Compass, Eye, Filter, CalendarCheck, RotateCcw } from 'lucide-react';
 
 // Sub-component to manage independent active image index states for each vehicle card
 function CarCard({ car, onReserve, t }) {
   const [activeImgIndex, setActiveImgIndex] = useState(0);
 
-  // Safe parsing of multi-images array
-  const getCarImages = () => {
-    let list = [];
-    try {
-      if (car.imageUrl && car.imageUrl.startsWith('[')) {
-        list = JSON.parse(car.imageUrl);
-      } else {
-        list = [car.imageUrl || 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&q=80&w=600'];
-      }
-    } catch (e) {
-      list = [car.imageUrl || 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&q=80&w=600'];
-    }
-    return list.map(url => {
-      if (url && url.startsWith('/uploads')) {
-        return `http://localhost:5000${url}`;
-      }
-      return url;
-    });
-  };
-
-  const images = getCarImages();
+  const images = normalizeImages(car.imageUrl);
 
   const handleNextImage = (e) => {
     e.stopPropagation();

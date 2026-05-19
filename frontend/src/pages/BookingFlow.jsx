@@ -7,6 +7,7 @@ import axios from 'axios';
 import { Calendar, MapPin, User, Phone, Mail, CheckCircle2, ChevronRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { API_BASE_URL } from '../context/AuthContext';
+import { normalizeImages } from '../utils/imageHelper';
 
 export default function BookingFlow() {
   const { t } = useLanguage();
@@ -101,23 +102,8 @@ export default function BookingFlow() {
     return `https://wa.me/212661901873?text=${encodeURIComponent(text)}`;
   };
 
-  // Format array parsed from image_url column helper
   const getFirstCarImage = (imageUrlString) => {
-    let rawUrl = '';
-    try {
-      if (imageUrlString && imageUrlString.startsWith('[')) {
-        const arr = JSON.parse(imageUrlString);
-        rawUrl = arr[0] || 'placeholder.jpg';
-      } else {
-        rawUrl = imageUrlString || 'placeholder.jpg';
-      }
-    } catch (e) {
-      rawUrl = imageUrlString || 'placeholder.jpg';
-    }
-    if (rawUrl && rawUrl.startsWith('/uploads')) {
-      return `http://localhost:5000${rawUrl}`;
-    }
-    return rawUrl;
+    return normalizeImages(imageUrlString)[0];
   };
 
   if (submitted) {

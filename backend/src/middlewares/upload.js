@@ -1,25 +1,18 @@
-// Multer Upload Middleware Configuration
+// Multer Upload Middleware Configuration (Cloudinary Integration)
 // CHGOURI CAR Marrakech Car Rental
 
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('../config/cloudinary');
 
-// Ensure upload directory exists
-const uploadDir = path.join(__dirname, '../../uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// Storage options
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
+// Storage options for Cloudinary
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'chgouri-car',
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+    // Transformation can be added here if needed, like { width: 800, height: 600, crop: 'limit' }
   },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, 'car-' + uniqueSuffix + path.extname(file.originalname));
-  }
 });
 
 // Image file type filter

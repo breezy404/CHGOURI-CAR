@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useLanguage } from '../context/LanguageContext';
 import { Calendar, MapPin, Sparkles, Shield, Compass, ChevronDown, Check } from 'lucide-react';
 import { API_BASE_URL } from '../context/AuthContext';
+import { normalizeImages } from '../utils/imageHelper';
 
 export default function Home() {
   const { t, locale } = useLanguage();
@@ -340,24 +341,6 @@ export default function Home() {
                 carFeatures = typeof car.features === 'string' ? car.features.split(',') : [];
               }
 
-              const getFirstCarImage = (imageUrlString) => {
-                let rawUrl = '';
-                try {
-                  if (imageUrlString && imageUrlString.startsWith('[')) {
-                    const arr = JSON.parse(imageUrlString);
-                    rawUrl = arr[0] || 'placeholder.jpg';
-                  } else {
-                    rawUrl = imageUrlString || 'placeholder.jpg';
-                  }
-                } catch (e) {
-                  rawUrl = imageUrlString || 'placeholder.jpg';
-                }
-                if (rawUrl && rawUrl.startsWith('/uploads')) {
-                  return `http://localhost:5000${rawUrl}`;
-                }
-                return rawUrl;
-              };
-
               return (
                 <div
                   key={car.id}
@@ -367,7 +350,7 @@ export default function Home() {
                   {/* Photo area */}
                   <div className="relative h-48 overflow-hidden bg-slate-100">
                     <img
-                      src={getFirstCarImage(car.imageUrl)}
+                      src={normalizeImages(car.imageUrl)[0]}
                       alt={`${car.brand} ${car.model}`}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"

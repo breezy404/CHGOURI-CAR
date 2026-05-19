@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { API_BASE_URL } from '../context/AuthContext';
+import { normalizeImages } from '../utils/imageHelper';
 import { 
   LayoutDashboard, 
   Car, 
@@ -320,23 +321,8 @@ export default function AdminDashboard() {
     }
   };
 
-  // Format array parsed from image_url column helper
   const getFirstCarImage = (imageUrlString) => {
-    let rawUrl = '';
-    try {
-      if (imageUrlString && imageUrlString.startsWith('[')) {
-        const arr = JSON.parse(imageUrlString);
-        rawUrl = arr[0] || 'placeholder.jpg';
-      } else {
-        rawUrl = imageUrlString || 'placeholder.jpg';
-      }
-    } catch (e) {
-      rawUrl = imageUrlString || 'placeholder.jpg';
-    }
-    if (rawUrl && rawUrl.startsWith('/uploads')) {
-      return `http://localhost:5000${rawUrl}`;
-    }
-    return rawUrl;
+    return normalizeImages(imageUrlString)[0];
   };
 
   return (
@@ -765,12 +751,36 @@ export default function AdminDashboard() {
                   </label>
 
                   {selectedFiles.length > 0 ? (
-                    <div className="text-[9px] text-[#265fad] font-bold max-w-xs truncate mt-1">
-                      📸 {selectedFiles.length} photo(s) sélectionnée(s).
+                    <div className="w-full mt-3 space-y-2">
+                      <div className="text-[9px] text-[#265fad] font-bold max-w-xs truncate text-center mx-auto">
+                        📸 {selectedFiles.length} photo(s) sélectionnée(s).
+                      </div>
+                      <div className="flex gap-2 overflow-x-auto pb-2 justify-center">
+                        {selectedFiles.map((file, idx) => (
+                          <img 
+                            key={idx} 
+                            src={URL.createObjectURL(file)} 
+                            alt="preview" 
+                            className="h-16 w-16 object-cover rounded-lg border border-slate-200"
+                          />
+                        ))}
+                      </div>
                     </div>
                   ) : carForm.imageUrl ? (
-                    <div className="text-[9px] text-[#265fad] font-bold max-w-xs truncate mt-1">
-                      📸 Photo(s) existante(s) conservée(s).
+                    <div className="w-full mt-3 space-y-2">
+                      <div className="text-[9px] text-[#265fad] font-bold max-w-xs truncate text-center mx-auto">
+                        📸 Photo(s) existante(s) conservée(s).
+                      </div>
+                      <div className="flex gap-2 overflow-x-auto pb-2 justify-center">
+                        {normalizeImages(carForm.imageUrl).map((url, idx) => (
+                          <img 
+                            key={idx} 
+                            src={url} 
+                            alt="preview" 
+                            className="h-16 w-16 object-cover rounded-lg border border-slate-200 opacity-80"
+                          />
+                        ))}
+                      </div>
                     </div>
                   ) : null}
                 </div>
