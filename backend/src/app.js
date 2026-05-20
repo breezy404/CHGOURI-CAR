@@ -108,8 +108,8 @@ const startServer = async () => {
     console.log('✅ Connection to MySQL database established successfully.');
     
     // Optional: Synchronize database schema locally
-    // In production, we run the schema.sql via migrations or manual imports, so we keep force: false
-    await sequelize.sync({ force: false });
+    // Synchronize database schema locally and add new columns
+    await sequelize.sync({ alter: true });
     console.log('✅ Database models synchronized with schema.');
 
     app.listen(PORT, () => {

@@ -22,12 +22,18 @@ import {
   Phone, 
   SlidersHorizontal 
 } from 'lucide-react';
+import OTPInput from '../components/OTPInput';
 
 export default function AdminDashboard() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   
   // Dashboard Sub-Section views
-  const [activeTab, setActiveTab] = useState('stats'); // 'stats' | 'bookings' | 'fleet' | 'messages'
+  const [activeTab, setActiveTab] = useState('stats'); // 'stats' | 'bookings' | 'fleet' | 'messages' | 'settings'
+
+  // Settings State
+  const [emailChangeStep, setEmailChangeStep] = useState(0);
+  const [newEmail, setNewEmail] = useState('');
+  const [emailChangeOtp, setEmailChangeOtp] = useState('');
 
   // Global State data
   const [stats, setStats] = useState({ totalCars: 0, totalBookings: 0, pendingBookings: 0 });
@@ -321,6 +327,42 @@ export default function AdminDashboard() {
     }
   };
 
+  // Request Email Change
+  const handleRequestEmailChange = async (e) => {
+    e.preventDefault();
+    setActionLoading(true); setErrorMessage(''); setSuccessMessage('');
+    try {
+      const res = await axios.post(`${API_BASE_URL}/auth/request-email-change`, { newEmail }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setSuccessMessage(res.data.message);
+      setEmailChangeStep(1);
+    } catch (err) {
+      setErrorMessage(err.response?.data?.message || 'Erreur réseau.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  // Verify Email Change
+  const handleVerifyEmailChange = async (e) => {
+    e.preventDefault();
+    setActionLoading(true); setErrorMessage(''); setSuccessMessage('');
+    try {
+      const res = await axios.post(`${API_BASE_URL}/auth/verify-email-change`, { newEmail, otp: emailChangeOtp }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setSuccessMessage('E-mail changé avec succès. Veuillez vous reconnecter avec votre nouvelle adresse.');
+      setEmailChangeStep(0);
+      setNewEmail('');
+      setEmailChangeOtp('');
+    } catch (err) {
+      setErrorMessage(err.response?.data?.message || 'Code invalide.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   const getFirstCarImage = (imageUrlString) => {
     return normalizeImages(imageUrlString)[0];
   };
@@ -402,6 +444,15 @@ export default function AdminDashboard() {
           >
             <Mail size={14} />
             Messages Clients
+          </button>
+          <button
+            onClick={() => setActiveTab('settings')}
+            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all ${
+              activeTab === 'settings' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            <SlidersHorizontal size={14} />
+            Paramètres
           </button>
         </div>
 
@@ -669,6 +720,43 @@ export default function AdminDashboard() {
                     </table>
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* TAB 5: Settings / Profile */}
+            {activeTab === 'settings' && (
+              <div className="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm space-y-6">
+                <h3 className="font-extrabold text-base text-slate-800 border-b border-slate-50 pb-3">Paramètres du Compte</h3>
+                
+                <div className="max-w-md">
+                  <h4 className="text-sm font-bold text-slate-900 mb-4">Changer l'adresse E-mail</h4>
+                  {emailChangeStep === 0 && (
+                    <form onSubmit={handleRequestEmailChange} className="space-y-4">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1.5">Nouvelle Adresse E-mail</label>
+                        <input type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} required className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-3 text-xs font-semibold focus:outline-none focus:border-brand-blue" />
+                      </div>
+                      <button type="submit" disabled={actionLoading} className="bg-brand-blue hover:bg-[#265fad] text-white text-xs font-bold py-2.5 px-4 rounded-xl transition-all">
+                        {actionLoading ? 'Envoi...' : 'Demander le changement'}
+                      </button>
+                    </form>
+                  )}
+                  {emailChangeStep === 1 && (
+                    <form onSubmit={handleVerifyEmailChange} className="space-y-4">
+                      <p className="text-xs text-slate-500">Un code de vérification a été envoyé à {newEmail}.</p>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase text-slate-500 mb-2 text-center">Code OTP à 6 chiffres</label>
+                        <OTPInput value={emailChangeOtp} onChange={setEmailChangeOtp} />
+                      </div>
+                      <div className="flex items-center justify-center gap-3 mt-6">
+                        <button type="submit" disabled={actionLoading} className="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition-all">
+                          {actionLoading ? 'Vérification...' : 'Valider le changement'}
+                        </button>
+                        <button type="button" onClick={() => setEmailChangeStep(0)} className="text-xs font-bold text-slate-400 hover:text-slate-600">Annuler</button>
+                      </div>
+                    </form>
+                  )}
+                </div>
               </div>
             )}
 

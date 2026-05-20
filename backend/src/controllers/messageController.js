@@ -25,6 +25,11 @@ exports.createMessage = async (req, res) => {
       message
     });
 
+    const emailService = require('../services/emailService');
+    emailService.sendAdminNewContactMessageEmail(newMessage).catch(err => {
+      console.error('Failed to send contact notification to admin:', err);
+    });
+
     return res.status(201).json({
       success: true,
       message: 'Votre message a été envoyé avec succès ! Nous vous recontacterons bientôt.',

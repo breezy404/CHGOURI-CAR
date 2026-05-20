@@ -41,6 +41,16 @@ const User = sequelize.define('User', {
   role: {
     type: DataTypes.ENUM('client', 'admin'),
     defaultValue: 'client'
+  },
+  otpCode: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    field: 'otp_code'
+  },
+  otpExpires: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    field: 'otp_expires'
   }
 }, {
   tableName: 'users',

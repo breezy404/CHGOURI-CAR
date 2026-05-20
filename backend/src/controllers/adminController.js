@@ -87,6 +87,15 @@ exports.updateBookingStatus = async (req, res) => {
       }
       booking.bookingStatus = bookingStatus;
       await booking.save();
+
+      // Fetch the booking with associated Car for the email
+      const bookingWithCar = await Booking.findByPk(id, { include: ['car'] });
+      
+      // Send status update email asynchronously
+      const emailService = require('../services/emailService');
+      emailService.sendStatusUpdateEmail(bookingWithCar, bookingStatus).catch(err => {
+        console.error('Failed to send status update email:', err);
+      });
     }
 
     return res.status(200).json({

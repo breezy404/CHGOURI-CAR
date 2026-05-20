@@ -18,7 +18,7 @@ export default function BookingFlow() {
   const [formData, setFormData] = useState({
     carId: urlCarId || '',
     customerName: '',
-    customerPhone: '',
+    customerPhone: '+212 ',
     customerEmail: '',
     pickupDate: '',
     returnDate: '',
@@ -75,6 +75,23 @@ export default function BookingFlow() {
 
     if (!formData.carId) {
       setErrorMsg('Veuillez sélectionner un véhicule dans la liste.');
+      setSubmitting(false);
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.customerEmail)) {
+      setErrorMsg('Veuillez entrer une adresse e-mail valide.');
+      setSubmitting(false);
+      return;
+    }
+
+    // Date validation
+    const pickup = new Date(formData.pickupDate);
+    const dropoff = new Date(formData.returnDate);
+    if (pickup > dropoff) {
+      setErrorMsg('La date de départ ne peut pas être supérieure à la date de retour.');
       setSubmitting(false);
       return;
     }
@@ -219,15 +236,17 @@ export default function BookingFlow() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Téléphone (WhatsApp)</label>
-                    <div className="relative">
-                      <Phone className="absolute left-3.5 top-3.5 text-slate-400" size={16} />
+                    <div className="relative flex items-center">
+                      <div className="absolute left-3.5 top-3.5 flex items-center gap-2 text-slate-400">
+                        <span title="Maroc">🇲🇦</span>
+                      </div>
                       <input
                         type="tel"
                         value={formData.customerPhone}
                         onChange={(e) => setFormData(prev => ({ ...prev, customerPhone: e.target.value }))}
                         required
-                        placeholder="Ex: +212 600-000000"
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-sm font-semibold focus:outline-none focus:border-brand-blue"
+                        placeholder="+212 600000000"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-12 pr-4 text-sm font-semibold focus:outline-none focus:border-brand-blue"
                       />
                     </div>
                   </div>

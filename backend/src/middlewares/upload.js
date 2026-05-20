@@ -11,7 +11,7 @@ const storage = new CloudinaryStorage({
   params: {
     folder: 'chgouri-car',
     allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
-    // Transformation can be added here if needed, like { width: 800, height: 600, crop: 'limit' }
+    transformation: [{ quality: 'auto:best', fetch_format: 'auto' }],
   },
 });
 

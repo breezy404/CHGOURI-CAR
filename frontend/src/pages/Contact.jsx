@@ -66,8 +66,8 @@ export default function Contact() {
     {
       icon: <Mail className="text-brand-blue" size={24} />,
       title: t('contactEmail'),
-      details: "contact@chgouricar.com",
-      href: "mailto:contact@chgouricar.com"
+      details: "chgouricar@gmail.com",
+      href: "mailto:chgouricar@gmail.com"
     },
     {
       icon: <MapPin className="text-brand-blue" size={24} />,
