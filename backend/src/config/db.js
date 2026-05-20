@@ -4,11 +4,11 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-const dbHost = process.env.DB_HOST || 'localhost';
-const dbPort = process.env.DB_PORT || 3306;
-const dbName = process.env.DB_NAME || 'chgouri_db';
-const dbUser = process.env.DB_USER || 'root';
-const dbPass = process.env.DB_PASS || '';
+const dbHost = process.env.DB_HOST || process.env.MYSQLHOST || 'localhost';
+const dbPort = process.env.DB_PORT || process.env.MYSQLPORT || 3306;
+const dbName = process.env.DB_NAME || process.env.MYSQLDATABASE || 'chgouri_db';
+const dbUser = process.env.DB_USER || process.env.MYSQLUSER || 'root';
+const dbPass = process.env.DB_PASS || process.env.MYSQLPASSWORD || '';
 const dbLogging = process.env.DB_LOGGING === 'true' ? console.log : false;
 
 const sequelize = new Sequelize(dbName, dbUser, dbPass, {
