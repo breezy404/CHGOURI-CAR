@@ -18,13 +18,17 @@ async function initializeDatabase() {
 
   try {
     // 1. Establish connection to MySQL without specifying database first
-    connection = await mysql.createConnection({
-      host: dbHost,
-      port: dbPort,
-      user: dbUser,
-      password: dbPass,
-      multipleStatements: true
-    });
+    if (process.env.DATABASE_URL || process.env.MYSQL_URL) {
+      connection = await mysql.createConnection(process.env.DATABASE_URL || process.env.MYSQL_URL);
+    } else {
+      connection = await mysql.createConnection({
+        host: dbHost,
+        port: dbPort,
+        user: dbUser,
+        password: dbPass,
+        multipleStatements: true
+      });
+    }
 
     console.log('✅ Connected to MySQL server successfully.');
 

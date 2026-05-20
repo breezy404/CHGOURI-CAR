@@ -116,7 +116,8 @@ const startServer = async () => {
       console.log(`🚀 CHGOURI CAR Server operational and listening on port ${PORT} in ${process.env.NODE_ENV} mode.`);
     });
   } catch (error) {
-    console.error('❌ Database connection or server initialization failed:', error.message);
+    console.error('❌ Database connection or server initialization failed:');
+    console.error(error);
     process.exit(1);
   }
 };

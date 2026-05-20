@@ -11,21 +11,34 @@ const dbUser = process.env.DB_USER || process.env.MYSQLUSER || 'root';
 const dbPass = process.env.DB_PASS || process.env.MYSQLPASSWORD || '';
 const dbLogging = process.env.DB_LOGGING === 'true' ? console.log : false;
 
-const sequelize = new Sequelize(dbName, dbUser, dbPass, {
-  host: dbHost,
-  port: dbPort,
-  dialect: 'mysql',
-  logging: dbLogging,
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  },
-  define: {
-    timestamps: true,
-    underscored: true // maps camelCase fields in Sequelize models to snake_case in tables
-  }
-});
+let sequelize;
+
+if (process.env.DATABASE_URL || process.env.MYSQL_URL) {
+  sequelize = new Sequelize(process.env.DATABASE_URL || process.env.MYSQL_URL, {
+    dialect: 'mysql',
+    logging: dbLogging,
+    define: {
+      timestamps: true,
+      underscored: true
+    }
+  });
+} else {
+  sequelize = new Sequelize(dbName, dbUser, dbPass, {
+    host: dbHost,
+    port: dbPort,
+    dialect: 'mysql',
+    logging: dbLogging,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    },
+    define: {
+      timestamps: true,
+      underscored: true
+    }
+  });
+}
 
 module.exports = sequelize;
