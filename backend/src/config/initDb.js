@@ -4,14 +4,15 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-const dbHost = process.env.DB_HOST || process.env.MYSQLHOST || 'localhost';
-const dbPort = parseInt(process.env.DB_PORT || process.env.MYSQLPORT || '3306');
-const dbUser = process.env.DB_USER || process.env.MYSQLUSER || 'root';
-const dbPass = process.env.DB_PASS || process.env.MYSQLPASSWORD || '';
-const dbName = process.env.DB_NAME || process.env.MYSQLDATABASE || 'chgouri_db';
+const dbHost = process.env.DB_HOST || process.env.MYSQLHOST || process.env.RAILWAY_MYSQL_HOST || 'localhost';
+const dbPort = parseInt(process.env.DB_PORT || process.env.MYSQLPORT || process.env.RAILWAY_MYSQL_PORT || '3306');
+const dbUser = process.env.DB_USER || process.env.MYSQLUSER || process.env.RAILWAY_MYSQL_USER || 'root';
+const dbPass = process.env.DB_PASS || process.env.MYSQLPASSWORD || process.env.RAILWAY_MYSQL_PASSWORD || '';
+const dbName = process.env.DB_NAME || process.env.MYSQLDATABASE || process.env.RAILWAY_MYSQL_DATABASE || 'chgouri_db';
 
 async function initializeDatabase() {
   console.log('🔄 Connecting to MySQL server...');
+  console.log(`📍 Host: ${dbHost} | Port: ${dbPort} | DB: ${dbName} | User: ${dbUser}`);
   let connection;
 
   try {
@@ -121,7 +122,8 @@ async function initializeDatabase() {
 
     console.log('🎉 Database initialized and seeded successfully!');
   } catch (error) {
-    console.error('❌ Database initialization failed:', error.message);
+    console.error('❌ Database initialization failed:', error.message || error);
+    console.error('🔍 Full error:', JSON.stringify(error, null, 2));
     process.exit(1);
   } finally {
     if (connection) await connection.end();
