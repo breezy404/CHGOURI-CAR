@@ -1,13 +1,17 @@
 const cloudinary = require('cloudinary').v2;
 
-if (!process.env.CLOUD_NAME || !process.env.API_KEY || !process.env.API_SECRET) {
+const cloudName = process.env.CLOUDINARY_CLOUD_NAME || process.env.CLOUD_NAME;
+const apiKey = process.env.CLOUDINARY_API_KEY || process.env.API_KEY;
+const apiSecret = process.env.CLOUDINARY_API_SECRET || process.env.API_SECRET;
+
+if (!cloudName || !apiKey || !apiSecret) {
   console.warn('⚠️ WARNING: Cloudinary credentials are missing in your .env file! Image uploads will fail.');
 }
 
 cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
+  cloud_name: cloudName,
+  api_key: apiKey,
+  api_secret: apiSecret,
   secure: true,
 });
 
