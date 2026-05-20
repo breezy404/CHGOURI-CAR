@@ -6,11 +6,11 @@ const path = require('path');
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-const dbHost = process.env.DB_HOST || 'localhost';
-const dbPort = process.env.DB_PORT || 3306;
-const dbUser = process.env.DB_USER || 'root';
-const dbPass = process.env.DB_PASS || '';
-const dbName = process.env.DB_NAME || 'chgouri_db';
+const dbHost = process.env.DB_HOST || process.env.MYSQLHOST || 'localhost';
+const dbPort = process.env.DB_PORT || process.env.MYSQLPORT || 3306;
+const dbUser = process.env.DB_USER || process.env.MYSQLUSER || 'root';
+const dbPass = process.env.DB_PASS || process.env.MYSQLPASSWORD || '';
+const dbName = process.env.DB_NAME || process.env.MYSQLDATABASE || 'chgouri_db';
 
 async function initializeDatabase() {
   console.log('🔄 Connecting to MySQL server to check/create database...');
