@@ -4,27 +4,34 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-const dbHost = process.env.DB_HOST || process.env.MYSQLHOST || process.env.RAILWAY_MYSQL_HOST || 'localhost';
-const dbPort = parseInt(process.env.DB_PORT || process.env.MYSQLPORT || process.env.RAILWAY_MYSQL_PORT || '3306');
-const dbUser = process.env.DB_USER || process.env.MYSQLUSER || process.env.RAILWAY_MYSQL_USER || 'root';
-const dbPass = process.env.DB_PASS || process.env.MYSQLPASSWORD || process.env.RAILWAY_MYSQL_PASSWORD || '';
-const dbName = process.env.DB_NAME || process.env.MYSQLDATABASE || process.env.RAILWAY_MYSQL_DATABASE || 'chgouri_db';
+let connectionConfig;
+
+if (process.env.MYSQL_URL) {
+  // Railway provides MYSQL_URL - use it directly
+  connectionConfig = {
+    uri: process.env.MYSQL_URL,
+    multipleStatements: true
+  };
+  console.log('🚂 Using Railway MYSQL_URL');
+} else {
+  // Local fallback using individual vars
+  connectionConfig = {
+    host: process.env.DB_HOST || process.env.MYSQLHOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || process.env.MYSQLPORT || '3306'),
+    user: process.env.DB_USER || process.env.MYSQLUSER || 'root',
+    password: process.env.DB_PASS || process.env.MYSQLPASSWORD || '',
+    database: process.env.DB_NAME || process.env.MYSQLDATABASE || 'chgouri_db',
+    multipleStatements: true
+  };
+  console.log(`📍 Host: ${connectionConfig.host} | Port: ${connectionConfig.port} | DB: ${connectionConfig.database} | User: ${connectionConfig.user}`);
+}
 
 async function initializeDatabase() {
   console.log('🔄 Connecting to MySQL server...');
-  console.log(`📍 Host: ${dbHost} | Port: ${dbPort} | DB: ${dbName} | User: ${dbUser}`);
   let connection;
 
   try {
-    // Always connect with multipleStatements enabled
-    connection = await mysql.createConnection({
-      host: dbHost,
-      port: dbPort,
-      user: dbUser,
-      password: dbPass,
-      database: dbName,
-      multipleStatements: true
-    });
+    connection = await mysql.createConnection(connectionConfig);
 
     console.log('✅ Connected to MySQL server successfully.');
 
