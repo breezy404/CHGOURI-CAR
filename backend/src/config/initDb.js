@@ -20,6 +20,7 @@ async function initializeDatabase() {
     // 1. Establish connection to MySQL without specifying database first
     if (process.env.DATABASE_URL || process.env.MYSQL_URL) {
       connection = await mysql.createConnection(process.env.DATABASE_URL || process.env.MYSQL_URL);
+      console.log('✅ Connected to Railway MySQL server successfully.');
     } else {
       connection = await mysql.createConnection({
         host: dbHost,
@@ -28,9 +29,11 @@ async function initializeDatabase() {
         password: dbPass,
         multipleStatements: true
       });
+      console.log('✅ Connected to local MySQL server successfully.');
+      console.log('🔄 Creating database if it does not exist...');
+      await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`);
+      // Removed explicit USE; Railway selects db automatically
     }
-
-    console.log('✅ Connected to MySQL server successfully.');
 
     // 2. Read schema.sql file
     const schemaPath = path.join(__dirname, '..', '..', 'schema.sql');

@@ -1,18 +1,14 @@
 -- CHGOURI CAR Database Schema (MySQL - Simplified Commercial Version)
 -- Created for Abdelali LACHGAR - Marrakech Economy Car Rental Platform
 
-CREATE DATABASE IF NOT EXISTS chgouri_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE chgouri_db;
 
 -- Disable foreign key checks temporarily to allow clean drops
 SET FOREIGN_KEY_CHECKS = 0;
-DROP TABLE IF EXISTS availability_calendar;
-DROP TABLE IF EXISTS seasonal_pricing;
-DROP TABLE IF EXISTS booking_options;
 DROP TABLE IF EXISTS bookings;
 DROP TABLE IF EXISTS cars;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS messages;
+-- Database is managed by Railway; no need to CREATE or USE here
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- 1. USERS TABLE (Single Admin Store)
