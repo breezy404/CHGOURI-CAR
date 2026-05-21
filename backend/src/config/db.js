@@ -17,6 +17,11 @@ if (process.env.DATABASE_URL || process.env.MYSQL_URL) {
   sequelize = new Sequelize(process.env.DATABASE_URL || process.env.MYSQL_URL, {
     dialect: 'mysql',
     logging: dbLogging,
+    dialectOptions: {
+      ssl: {
+        rejectUnauthorized: false
+      }
+    },
     define: {
       timestamps: true,
       underscored: true

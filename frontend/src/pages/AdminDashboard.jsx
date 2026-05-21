@@ -559,8 +559,9 @@ export default function AdminDashboard() {
                             </td>
                             <td className="py-4 px-5 space-y-1">
                               <div className="font-extrabold text-slate-800">{book.pickupDate} au {book.returnDate}</div>
-                              <div className="text-slate-400 font-semibold flex items-center gap-1">
-                                <MapPin size={10} /> {book.pickupLocation}
+                              <div className="text-slate-400 font-semibold flex flex-col gap-1 mt-1 text-[10px]">
+                                <span className="flex items-center gap-1"><MapPin size={10} /> Livr: {book.pickupLocation}</span>
+                                <span className="flex items-center gap-1"><MapPin size={10} /> Récup: {book.returnLocation || book.pickupLocation}</span>
                               </div>
                             </td>
                             <td className="py-4 px-5 text-center">

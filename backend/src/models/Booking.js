@@ -45,6 +45,11 @@ const Booking = sequelize.define('Booking', {
     allowNull: false,
     field: 'pickup_location'
   },
+  returnLocation: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: 'return_location'
+  },
   bookingStatus: {
     type: DataTypes.ENUM('pending', 'contacted', 'confirmed', 'cancelled'),
     defaultValue: 'pending',

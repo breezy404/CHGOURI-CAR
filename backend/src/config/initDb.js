@@ -7,11 +7,8 @@ require('dotenv').config();
 let connectionConfig;
 
 if (process.env.MYSQL_URL) {
-  // Railway provides MYSQL_URL - use it directly
-  connectionConfig = {
-    uri: process.env.MYSQL_URL,
-    multipleStatements: true
-  };
+  // Use the connection string directly
+  connectionConfig = process.env.MYSQL_URL;
   console.log('🚂 Using Railway MYSQL_URL');
 } else {
   // Local fallback using individual vars
@@ -26,12 +23,46 @@ if (process.env.MYSQL_URL) {
   console.log(`📍 Host: ${connectionConfig.host} | Port: ${connectionConfig.port} | DB: ${connectionConfig.database} | User: ${connectionConfig.user}`);
 }
 
+// Sleep helper
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function connectWithRetry(config, maxRetries = 5, delayMs = 3000) {
+  for (let i = 1; i <= maxRetries; i++) {
+    try {
+      console.log(`🔄 Tentative ${i}/${maxRetries} de connexion au serveur MySQL...`);
+      // Parse the connection string to an object to safely inject SSL and multipleStatements
+      let connOptions;
+      if (typeof config === 'string') {
+        const urlObj = new URL(config);
+        connOptions = {
+          host: urlObj.hostname,
+          port: parseInt(urlObj.port) || 3306,
+          user: urlObj.username,
+          password: urlObj.password,
+          database: urlObj.pathname.replace('/', ''),
+          multipleStatements: true,
+          ssl: { rejectUnauthorized: false } // Crucial for Railway
+        };
+      } else {
+        connOptions = { ...config, ssl: { rejectUnauthorized: false } };
+      }
+      
+      const conn = await mysql.createConnection(connOptions);
+      return conn;
+    } catch (error) {
+      console.error(`❌ Connection attempt ${i} failed: ${error.message}`);
+      if (i === maxRetries) throw error;
+      console.log(`⏳ Waiting ${delayMs/1000}s before next attempt (container might be starting)...`);
+      await sleep(delayMs);
+    }
+  }
+}
+
 async function initializeDatabase() {
-  console.log('🔄 Connecting to MySQL server...');
   let connection;
 
   try {
-    connection = await mysql.createConnection(connectionConfig);
+    connection = await connectWithRetry(connectionConfig);
 
     console.log('✅ Connected to MySQL server successfully.');
 
@@ -89,6 +120,7 @@ async function initializeDatabase() {
         pickup_date DATE NOT NULL,
         return_date DATE NOT NULL,
         pickup_location VARCHAR(255) NOT NULL,
+        return_location VARCHAR(255) NOT NULL,
         booking_status ENUM('pending', 'contacted', 'confirmed', 'cancelled') DEFAULT 'pending',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

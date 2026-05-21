@@ -145,11 +145,11 @@ exports.sendBookingConfirmationEmail = async (booking, pdfBuffer) => {
             </tr>
             <tr>
               <td style="padding: 8px 0; font-weight: 600; color: #64748b;">Date de Retour:</td>
-              <td style="padding: 8px 0; text-align: right;">${booking.dropoffDate}</td>
+              <td style="padding: 8px 0; text-align: right;">${booking.returnDate}</td>
             </tr>
             <tr>
               <td style="padding: 8px 0; font-weight: 600; color: #64748b;">Lieu de Retour:</td>
-              <td style="padding: 8px 0; text-align: right;">${booking.dropoffLocation}</td>
+              <td style="padding: 8px 0; text-align: right;">${booking.returnLocation}</td>
             </tr>
             <tr>
               <td style="padding: 12px 0 8px 0; font-weight: 600; color: #64748b; border-top: 1px dashed #cbd5e1;">Total Général:</td>
@@ -245,6 +245,10 @@ exports.sendBookingRequestEmail = async (booking, days) => {
               <td style="padding: 10px 0; text-align: right; border-bottom: 1px dashed #cbd5e1; font-weight: bold;">${booking.pickupLocation}</td>
             </tr>
             <tr>
+              <td style="padding: 10px 0; font-weight: 600; color: #64748b; border-bottom: 1px dashed #cbd5e1;">Lieu de récupération:</td>
+              <td style="padding: 10px 0; text-align: right; border-bottom: 1px dashed #cbd5e1; font-weight: bold;">${booking.returnLocation}</td>
+            </tr>
+            <tr>
               <td style="padding: 10px 0; font-weight: 600; color: #64748b; border-bottom: 1px dashed #cbd5e1;">Date de Départ:</td>
               <td style="padding: 10px 0; text-align: right; border-bottom: 1px dashed #cbd5e1; font-weight: bold;">${booking.pickupDate}</td>
             </tr>
@@ -318,8 +322,12 @@ exports.sendAdminNewBookingEmail = async (booking, days) => {
             <td style="padding: 10px; border: 1px solid #e2e8f0;">Du ${booking.pickupDate} au ${booking.returnDate} (${days} jours)</td>
           </tr>
           <tr>
-            <td style="padding: 10px; font-weight: 600; background: #f8fafc; border: 1px solid #e2e8f0;">Lieu</td>
+            <td style="padding: 10px; font-weight: 600; background: #f8fafc; border: 1px solid #e2e8f0;">Prise en charge</td>
             <td style="padding: 10px; border: 1px solid #e2e8f0;">${booking.pickupLocation}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; font-weight: 600; background: #f8fafc; border: 1px solid #e2e8f0;">Récupération</td>
+            <td style="padding: 10px; border: 1px solid #e2e8f0;">${booking.returnLocation}</td>
           </tr>
         </table>
 
@@ -379,7 +387,8 @@ exports.sendStatusUpdateEmail = async (booking, newStatus) => {
           <h3 style="margin-top: 0; color: #0f172a; font-size: 16px; font-weight: 800; border-bottom: 1px solid #cbd5e1; padding-bottom: 10px;">RAPPEL DE VOTRE COMMANDE #${booking.id}</h3>
           <p style="margin: 5px 0;"><strong>Véhicule :</strong> ${carName}</p>
           <p style="margin: 5px 0;"><strong>Dates :</strong> Du ${booking.pickupDate} au ${booking.returnDate}</p>
-          <p style="margin: 5px 0;"><strong>Lieu :</strong> ${booking.pickupLocation}</p>
+          <p style="margin: 5px 0;"><strong>Prise en charge :</strong> ${booking.pickupLocation}</p>
+          <p style="margin: 5px 0;"><strong>Récupération :</strong> ${booking.returnLocation}</p>
         </div>
 
         <div style="text-align: center; margin: 35px 0 15px 0;">

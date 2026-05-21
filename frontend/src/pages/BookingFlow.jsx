@@ -22,7 +22,8 @@ export default function BookingFlow() {
     customerEmail: '',
     pickupDate: '',
     returnDate: '',
-    pickupLocation: 'Aéroport de Marrakech-Ménara ✈️'
+    pickupLocation: 'Aéroport de Marrakech-Ménara ✈️',
+    returnLocation: 'Aéroport de Marrakech-Ménara ✈️'
   });
 
   // State Management
@@ -144,7 +145,8 @@ export default function BookingFlow() {
             <div><span className="font-bold">Véhicule :</span> {selectedCar ? `${selectedCar.brand} ${selectedCar.model}` : 'Voiture'}</div>
             <div><span className="font-bold">Départ :</span> {formData.pickupDate}</div>
             <div><span className="font-bold">Retour :</span> {formData.returnDate}</div>
-            <div><span className="font-bold">Lieu de prise :</span> {formData.pickupLocation}</div>
+            <div><span className="font-bold">Lieu de livraison :</span> {formData.pickupLocation}</div>
+            <div><span className="font-bold">Lieu de récupération :</span> {formData.returnLocation}</div>
           </div>
 
           <div className="flex flex-col gap-3">
@@ -300,21 +302,41 @@ export default function BookingFlow() {
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Lieu de prise en charge</label>
-                  <div className="relative">
-                    <MapPin className="absolute left-3.5 top-3.5 text-slate-400" size={16} />
-                    <select
-                      value={formData.pickupLocation}
-                      onChange={(e) => setFormData(prev => ({ ...prev, pickupLocation: e.target.value }))}
-                      required
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-sm font-semibold focus:outline-none focus:border-brand-blue"
-                    >
-                      <option value="Aéroport de Marrakech-Ménara ✈️">Aéroport de Marrakech-Ménara ✈️</option>
-                      <option value="Gare Ferroviaire de Marrakech 🚊">Gare Ferroviaire de Marrakech 🚊</option>
-                      <option value="Gueliz Centre-ville 🏢">Gueliz Centre-ville 🏢</option>
-                      <option value="Livraison Hôtel / Riad 🏨">Livraison Hôtel / Riad 🏨</option>
-                    </select>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Lieu de livraison</label>
+                    <div className="relative">
+                      <MapPin className="absolute left-3.5 top-3.5 text-slate-400" size={16} />
+                      <select
+                        value={formData.pickupLocation}
+                        onChange={(e) => setFormData(prev => ({ ...prev, pickupLocation: e.target.value }))}
+                        required
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-sm font-semibold focus:outline-none focus:border-brand-blue"
+                      >
+                        <option value="Aéroport de Marrakech-Ménara ✈️">Aéroport de Marrakech-Ménara ✈️</option>
+                        <option value="Gare Ferroviaire de Marrakech 🚊">Gare Ferroviaire de Marrakech 🚊</option>
+                        <option value="Gueliz Centre-ville 🏢">Gueliz Centre-ville 🏢</option>
+                        <option value="Livraison Hôtel / Riad 🏨">Livraison Hôtel / Riad 🏨</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Lieu de récupération</label>
+                    <div className="relative">
+                      <MapPin className="absolute left-3.5 top-3.5 text-slate-400" size={16} />
+                      <select
+                        value={formData.returnLocation}
+                        onChange={(e) => setFormData(prev => ({ ...prev, returnLocation: e.target.value }))}
+                        required
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-sm font-semibold focus:outline-none focus:border-brand-blue"
+                      >
+                        <option value="Aéroport de Marrakech-Ménara ✈️">Aéroport de Marrakech-Ménara ✈️</option>
+                        <option value="Gare Ferroviaire de Marrakech 🚊">Gare Ferroviaire de Marrakech 🚊</option>
+                        <option value="Gueliz Centre-ville 🏢">Gueliz Centre-ville 🏢</option>
+                        <option value="Récupération Hôtel / Riad 🏨">Récupération Hôtel / Riad 🏨</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>

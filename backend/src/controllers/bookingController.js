@@ -15,11 +15,12 @@ exports.createBooking = async (req, res) => {
       customerEmail, 
       pickupDate, 
       returnDate, 
-      pickupLocation 
+      pickupLocation,
+      returnLocation
     } = req.body;
 
     // 1. Basic validation
-    if (!carId || !customerName || !customerPhone || !customerEmail || !pickupDate || !returnDate || !pickupLocation) {
+    if (!carId || !customerName || !customerPhone || !customerEmail || !pickupDate || !returnDate || !pickupLocation || !returnLocation) {
       return res.status(400).json({
         success: false,
         message: 'Veuillez remplir tous les champs obligatoires du formulaire.'
@@ -50,6 +51,7 @@ exports.createBooking = async (req, res) => {
       pickupDate,
       returnDate,
       pickupLocation,
+      returnLocation,
       totalAmount,
       bookingStatus: 'pending'
     });
