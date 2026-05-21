@@ -47,7 +47,7 @@ const Car = sequelize.define('Car', {
     field: 'image_url'
   },
   features: {
-    type: DataTypes.JSON,
+    type: DataTypes.TEXT,
     allowNull: true
   },
   status: {
