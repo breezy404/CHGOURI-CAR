@@ -8,7 +8,6 @@ const rateLimit = require('express-rate-limit');
 const { loadEnv } = require('./config/loadEnv');
 loadEnv();
 
-// Import DB config
 const { sequelize } = require('./models');
 
 // Import Routers
