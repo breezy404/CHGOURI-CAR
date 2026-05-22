@@ -6,33 +6,23 @@ require('dotenv').config();
 
 let connectionConfig;
 
-if (process.env.MYSQLHOST || process.env.DB_HOST) {
-  // Prefer individual vars to avoid URL parsing issues with special characters in passwords
-  connectionConfig = {
-    host: process.env.DB_HOST || process.env.MYSQLHOST || 'localhost',
-    port: parseInt(process.env.DB_PORT || process.env.MYSQLPORT || '3306'),
-    user: process.env.DB_USER || process.env.MYSQLUSER || 'root',
-    password: process.env.DB_PASS || process.env.MYSQLPASSWORD || '',
-    database: process.env.DB_NAME || process.env.MYSQLDATABASE || 'chgouri_db',
-    multipleStatements: true
-  };
-  console.log(`📍 Host: ${connectionConfig.host} | Port: ${connectionConfig.port} | DB: ${connectionConfig.database} | User: ${connectionConfig.user}`);
-} else if (process.env.MYSQL_URL) {
-  // Use the connection string directly
-  connectionConfig = process.env.MYSQL_URL;
-  console.log('🚂 Using Railway MYSQL_URL');
-} else {
-  // Local fallback using individual vars
-  connectionConfig = {
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: '',
-    database: 'chgouri_db',
-    multipleStatements: true
-  };
-  console.log(`📍 Local fallback Host: ${connectionConfig.host} | Port: ${connectionConfig.port} | DB: ${connectionConfig.database}`);
-}
+// Railway private networking: MYSQLHOST points to *.railway.internal (port 3306).
+// MYSQL_URL uses the public proxy (*.proxy.rlwy.net) which does NOT work service-to-service.
+const host = process.env.MYSQLHOST || process.env.DB_HOST || 'localhost';
+const port = parseInt(process.env.MYSQLPORT || process.env.DB_PORT || '3306');
+const user = process.env.MYSQLUSER || process.env.DB_USER || 'root';
+const password = process.env.MYSQLPASSWORD || process.env.DB_PASS || '';
+const database = process.env.MYSQLDATABASE || process.env.DB_NAME || 'chgouri_db';
+
+connectionConfig = {
+  host,
+  port,
+  user,
+  password,
+  database,
+  multipleStatements: true
+};
+console.log(`📍 DB Config: host=${host} port=${port} db=${database} user=${user}`);
 
 // Sleep helper
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -41,23 +31,7 @@ async function connectWithRetry(config, maxRetries = 20, delayMs = 4000) {
   for (let i = 1; i <= maxRetries; i++) {
     try {
       console.log(`🔄 Tentative ${i}/${maxRetries} de connexion au serveur MySQL...`);
-      // Parse the connection string to an object to safely inject SSL and multipleStatements
-      let connOptions;
-      if (typeof config === 'string') {
-        const urlObj = new URL(config);
-        connOptions = {
-          host: urlObj.hostname,
-          port: parseInt(urlObj.port) || 3306,
-          user: urlObj.username,
-          password: urlObj.password,
-          database: urlObj.pathname.replace('/', ''),
-          multipleStatements: true
-        };
-      } else {
-        connOptions = { ...config };
-      }
-      
-      const conn = await mysql.createConnection(connOptions);
+      const conn = await mysql.createConnection(config);
       return conn;
     } catch (error) {
       console.error(`❌ Connection attempt ${i} failed: ${error.message}`);

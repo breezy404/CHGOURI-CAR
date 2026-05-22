@@ -4,20 +4,24 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-const dbHost = process.env.DB_HOST || process.env.MYSQLHOST || 'localhost';
-const dbPort = process.env.DB_PORT || process.env.MYSQLPORT || 3306;
-const dbName = process.env.DB_NAME || process.env.MYSQLDATABASE || 'chgouri_db';
-const dbUser = process.env.DB_USER || process.env.MYSQLUSER || 'root';
-const dbPass = process.env.DB_PASS || process.env.MYSQLPASSWORD || '';
 const dbLogging = process.env.DB_LOGGING === 'true' ? console.log : false;
 
 let sequelize;
 
-// Always prefer individual variables to avoid URL parsing issues with special characters in passwords
-if (process.env.MYSQLHOST || process.env.DB_HOST) {
-  sequelize = new Sequelize(dbName, dbUser, dbPass, {
-    host: dbHost,
-    port: dbPort,
+// Railway provides MYSQLHOST for private networking (service-to-service).
+// MYSQL_URL uses the public proxy which does NOT work for internal connections.
+// Always prefer individual variables for Railway private networking.
+const host = process.env.MYSQLHOST || process.env.DB_HOST;
+const port = process.env.MYSQLPORT || process.env.DB_PORT || 3306;
+const database = process.env.MYSQLDATABASE || process.env.DB_NAME || 'chgouri_db';
+const user = process.env.MYSQLUSER || process.env.DB_USER || 'root';
+const password = process.env.MYSQLPASSWORD || process.env.DB_PASS || '';
+
+if (host) {
+  console.log(`🔌 DB Config: host=${host} port=${port} db=${database} user=${user}`);
+  sequelize = new Sequelize(database, user, password, {
+    host: host,
+    port: parseInt(port),
     dialect: 'mysql',
     logging: dbLogging,
     pool: {
@@ -31,20 +35,12 @@ if (process.env.MYSQLHOST || process.env.DB_HOST) {
       underscored: true
     }
   });
-} else if (process.env.DATABASE_URL || process.env.MYSQL_URL) {
-  sequelize = new Sequelize(process.env.DATABASE_URL || process.env.MYSQL_URL, {
-    dialect: 'mysql',
-    logging: dbLogging,
-    define: {
-      timestamps: true,
-      underscored: true
-    }
-  });
 } else {
-  // Local fallback
-  sequelize = new Sequelize(dbName, dbUser, dbPass, {
-    host: dbHost,
-    port: dbPort,
+  // Local development fallback
+  console.log('🔌 DB Config: local fallback (localhost)');
+  sequelize = new Sequelize('chgouri_db', 'root', '', {
+    host: 'localhost',
+    port: 3306,
     dialect: 'mysql',
     logging: dbLogging,
     define: {

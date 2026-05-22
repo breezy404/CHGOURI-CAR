@@ -104,12 +104,25 @@ app.use((err, req, res, next) => {
 const startServer = async () => {
   try {
     console.log('🔄 Checking database connection...');
-    await sequelize.authenticate();
+    let authenticated = false;
+    let retries = 15;
+    const delayMs = 4000;
+    while (!authenticated && retries > 0) {
+      try {
+        await sequelize.authenticate();
+        authenticated = true;
+      } catch (err) {
+        retries--;
+        console.warn(`⚠️ Database connection attempt failed. ${retries} retries remaining... Error: ${err.message}`);
+        if (retries === 0) throw err;
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+      }
+    }
     console.log('✅ Connection to MySQL database established successfully.');
     
     // Optional: Synchronize database schema locally
     // Synchronize database schema locally and add new columns
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     console.log('✅ Database models synchronized with schema.');
 
     app.listen(PORT, () => {
