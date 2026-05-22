@@ -1,10 +1,27 @@
-// Shared database connection settings (local + Railway)
+const { isRailwayRuntime } = require('./loadEnv');
+
 const isProduction = process.env.NODE_ENV === 'production';
-const isRailway = Boolean(
-  process.env.RAILWAY_ENVIRONMENT ||
-  process.env.RAILWAY_PROJECT_ID ||
-  process.env.RAILWAY_SERVICE_ID
-);
+const isRailway = isRailwayRuntime();
+// Railway always sets PORT; catches deploys where RAILWAY_* is missing
+const isCloudRuntime = isRailway || Boolean(process.env.PORT);
+
+function logEnvDiagnostics() {
+  const keys = [
+    'MYSQLHOST',
+    'MYSQLPORT',
+    'MYSQLUSER',
+    'MYSQLPASSWORD',
+    'MYSQLDATABASE',
+    'MYSQL_URL',
+    'RAILWAY_ENVIRONMENT',
+    'RAILWAY_SERVICE_ID',
+    'PORT'
+  ];
+  console.log(
+    '🔎 Env:',
+    keys.map((k) => `${k}=${process.env[k] ? 'set' : 'MISSING'}`).join(' | ')
+  );
+}
 
 function parseDatabaseUrl(url) {
   if (!url) return null;
@@ -23,42 +40,45 @@ function parseDatabaseUrl(url) {
 }
 
 function getDbConfig() {
-  // 1) Railway private networking (service-to-service)
+  // 1) Railway private networking (required for backend → MySQL on Railway)
   if (process.env.MYSQLHOST) {
     return {
       host: process.env.MYSQLHOST,
       port: parseInt(process.env.MYSQLPORT || '3306', 10),
       user: process.env.MYSQLUSER || 'root',
       password: process.env.MYSQLPASSWORD || '',
-      database: process.env.MYSQLDATABASE || process.env.DB_NAME || 'railway',
+      database: process.env.MYSQLDATABASE || 'railway',
       source: 'MYSQLHOST'
     };
   }
 
-  // 2) Connection URL (public proxy — local dev only; fails inside Railway)
+  // 2) Connection URL (OK for local PC; public proxy fails inside Railway)
   const fromUrl = parseDatabaseUrl(
     process.env.MYSQL_URL || process.env.DATABASE_URL
   );
   if (fromUrl) {
-    if (isRailway && /\.proxy\.rlwy\.net$/i.test(fromUrl.host)) {
+    if (isCloudRuntime && /\.proxy\.rlwy\.net$/i.test(fromUrl.host)) {
+      logEnvDiagnostics();
       throw new Error(
-        'MYSQL_URL uses the public proxy (*.proxy.rlwy.net), which does not work from inside Railway. ' +
-        'On your CHGOURI-CAR service: delete MYSQL_URL, then add MYSQLHOST, MYSQLPORT, MYSQLUSER, ' +
-        'MYSQLPASSWORD, MYSQLDATABASE as references from your MySQL service (e.g. ${{MySQL-sH4F.MYSQLHOST}}).'
+        'MYSQL_URL uses the public proxy (*.proxy.rlwy.net) and cannot be used from inside Railway. ' +
+        'Delete MYSQL_URL on CHGOURI-CAR. Add MYSQLHOST, MYSQLPORT, MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE ' +
+        'as references from your MySQL service (e.g. ${{MySQL-sH4F.MYSQLHOST}}).'
       );
     }
     return { ...fromUrl, source: 'MYSQL_URL' };
   }
 
-  // 3) On Railway without DB vars: fail fast (do not use bundled .env localhost)
-  if (isRailway || isProduction) {
-    const hint = isRailway
-      ? 'On Railway: open your backend service → Variables → Add variable reference from your MySQL service (MYSQLHOST, MYSQLPORT, MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE).'
-      : 'Set MYSQLHOST (Railway private) or MYSQL_URL / DATABASE_URL.';
-    throw new Error(`Missing database configuration. ${hint}`);
+  // 3) Cloud/Railway without DB config — stop immediately (no localhost retries)
+  if (isCloudRuntime || isProduction) {
+    logEnvDiagnostics();
+    throw new Error(
+      'MYSQLHOST is not set on this service. In Railway → CHGOURI-CAR → Variables → ' +
+      'add references: MYSQLHOST, MYSQLPORT, MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE ' +
+      'from your MySQL service. Remove MYSQL_URL and any DB_HOST=localhost from service variables.'
+    );
   }
 
-  // 4) Local development
+  // 4) Local development only
   return {
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '3306', 10),

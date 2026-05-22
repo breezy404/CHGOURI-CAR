@@ -2,7 +2,8 @@
 // CHGOURI CAR Marrakech Car Rental
 
 const mysql = require('mysql2/promise');
-require('dotenv').config();
+const { loadEnv } = require('./loadEnv');
+loadEnv();
 
 const { getDbConfig, logDbConfig } = require('./dbConfig');
 

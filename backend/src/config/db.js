@@ -2,7 +2,8 @@
 // CHGOURI CAR Marrakech Car Rental
 
 const { Sequelize } = require('sequelize');
-require('dotenv').config();
+const { loadEnv } = require('./loadEnv');
+loadEnv();
 
 const { getDbConfig, logDbConfig } = require('./dbConfig');
 
