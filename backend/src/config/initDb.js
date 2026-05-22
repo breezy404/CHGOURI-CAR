@@ -4,25 +4,19 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-let connectionConfig;
+const { getDbConfig, logDbConfig } = require('./dbConfig');
 
-// Railway private networking: MYSQLHOST points to *.railway.internal (port 3306).
-// MYSQL_URL uses the public proxy (*.proxy.rlwy.net) which does NOT work service-to-service.
-const host = process.env.MYSQLHOST || process.env.DB_HOST || 'localhost';
-const port = parseInt(process.env.MYSQLPORT || process.env.DB_PORT || '3306');
-const user = process.env.MYSQLUSER || process.env.DB_USER || 'root';
-const password = process.env.MYSQLPASSWORD || process.env.DB_PASS || '';
-const database = process.env.MYSQLDATABASE || process.env.DB_NAME || 'chgouri_db';
+const db = getDbConfig();
+logDbConfig(db);
 
-connectionConfig = {
-  host,
-  port,
-  user,
-  password,
-  database,
+const connectionConfig = {
+  host: db.host,
+  port: db.port,
+  user: db.user,
+  password: db.password,
+  database: db.database,
   multipleStatements: true
 };
-console.log(`📍 DB Config: host=${host} port=${port} db=${database} user=${user}`);
 
 // Sleep helper
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
