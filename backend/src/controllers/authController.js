@@ -6,12 +6,13 @@ const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const bcrypt = require('bcryptjs');
 const { sendOTPVerificationEmail } = require('../services/emailService');
+const { cleanEnv } = require('../config/env');
 
 // Helper to sign JWT token
 const signToken = (id, role) => {
   return jwt.sign(
     { id, role },
-    process.env.JWT_SECRET || 'super_secret_chgouri_key_marrakech_2026_9988',
+    cleanEnv('JWT_SECRET', 'super_secret_chgouri_key_marrakech_2026_9988'),
     { expiresIn: '1d' } // Enforced 1 day expiration
   );
 };
@@ -28,7 +29,8 @@ exports.loginLimiter = rateLimit({
  */
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const email = String(req.body.email || '').trim().toLowerCase();
+    const password = req.body.password;
 
     if (!email || !password) {
       return res.status(400).json({ success: false, message: 'Veuillez fournir un e-mail et un mot de passe.' });
@@ -36,6 +38,7 @@ exports.login = async (req, res) => {
 
     const admin = await User.findOne({ where: { email } });
     if (!admin) {
+      console.warn(`[LOGIN] No user for email: ${email}`);
       return res.status(401).json({ success: false, message: 'Identifiants incorrects.' });
     }
 
@@ -43,8 +46,13 @@ exports.login = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Accès refusé. Réservé aux administrateurs.' });
     }
 
-    const isMatch = await bcrypt.compare(password, admin.passwordHash);
+    const hash = admin.passwordHash || admin.getDataValue('password_hash');
+    const isMatch = hash
+      ? await bcrypt.compare(password, hash)
+      : await admin.comparePassword(password);
+
     if (!isMatch) {
+      console.warn(`[LOGIN] Bad password for: ${email}`);
       return res.status(401).json({ success: false, message: 'Identifiants incorrects.' });
     }
 
@@ -97,7 +105,7 @@ const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString()
  */
 exports.forgotPassword = async (req, res) => {
   try {
-    const { email } = req.body;
+    const email = String(req.body.email || '').trim().toLowerCase();
     if (!email) return res.status(400).json({ success: false, message: 'L\'adresse e-mail est requise.' });
 
     const user = await User.findOne({ where: { email } });
@@ -110,9 +118,18 @@ exports.forgotPassword = async (req, res) => {
     user.otpExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
     await user.save();
 
-    await sendOTPVerificationEmail(user.email, otp, 'Password Reset');
+    try {
+      await sendOTPVerificationEmail(user.email, otp, 'Password Reset');
+    } catch (emailErr) {
+      console.error('Brevo OTP send failed:', emailErr.message);
+      return res.status(503).json({
+        success: false,
+        message:
+          'Impossible d\'envoyer l\'e-mail (Brevo). Vérifiez BREVO_API_KEY sur Railway et que l\'expéditeur est validé dans Brevo.'
+      });
+    }
 
-    return res.status(200).json({ success: true, message: 'Si l\'adresse e-mail existe, un code OTP a été envoyé.' });
+    return res.status(200).json({ success: true, message: 'Un code OTP a été envoyé à votre adresse e-mail.' });
   } catch (error) {
     console.error('Forgot password error:', error);
     return res.status(500).json({ success: false, message: 'Erreur lors de la demande de réinitialisation.' });
@@ -124,7 +141,8 @@ exports.forgotPassword = async (req, res) => {
  */
 exports.verifyOTP = async (req, res) => {
   try {
-    const { email, otp } = req.body;
+    const email = String(req.body.email || '').trim().toLowerCase();
+    const otp = req.body.otp;
     if (!email || !otp) return res.status(400).json({ success: false, message: 'Email et OTP requis.' });
 
     const user = await User.findOne({ where: { email, otpCode: otp } });

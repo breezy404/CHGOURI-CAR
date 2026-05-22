@@ -2,11 +2,14 @@
 // CHGOURI CAR Marrakech Car Rental
 
 const axios = require('axios');
-require('dotenv').config();
+const { loadEnv } = require('../config/loadEnv');
+const { cleanEnv } = require('../config/env');
 
-const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const SENDER_EMAIL = process.env.SMTP_FROM_EMAIL || 'chgouricar@gmail.com';
-const SENDER_NAME = process.env.SMTP_FROM_NAME || 'CHGOURI CAR Marrakech';
+loadEnv();
+
+const BREVO_API_KEY = cleanEnv('BREVO_API_KEY');
+const SENDER_EMAIL = cleanEnv('SMTP_FROM_EMAIL', 'chgouricar@gmail.com');
+const SENDER_NAME = cleanEnv('SMTP_FROM_NAME', 'CHGOURI CAR Marrakech');
 const LOGO_URL = 'https://res.cloudinary.com/dvppe25pp/image/upload/v1779306384/chgouri-car/assets/logo.png';
 
 /**
@@ -14,18 +17,16 @@ const LOGO_URL = 'https://res.cloudinary.com/dvppe25pp/image/upload/v1779306384/
  */
 const sendBrevoEmail = async (to, subject, htmlContent, attachment = null) => {
   if (!BREVO_API_KEY) {
-    console.log('🚨 [EMAIL SERVICE] Simulation. No Brevo API Key found.');
-    console.log(`➡️ Recipient: ${to}`);
-    console.log(`➡️ Subject: ${subject}`);
-    return;
+    console.error('🚨 [BREVO] BREVO_API_KEY is missing on this service.');
+    return { ok: false, error: 'BREVO_API_KEY not configured' };
   }
 
   try {
     const payload = {
       sender: { name: SENDER_NAME, email: SENDER_EMAIL },
       to: [{ email: to }],
-      subject: subject,
-      htmlContent: htmlContent
+      subject,
+      htmlContent
     };
 
     if (attachment) {
@@ -36,15 +37,19 @@ const sendBrevoEmail = async (to, subject, htmlContent, attachment = null) => {
       headers: {
         'api-key': BREVO_API_KEY,
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        Accept: 'application/json'
       }
     });
-    console.log(`📨 Email sent successfully via Brevo to ${to}. ID: ${response.data.messageId}`);
-    return response.data;
+    console.log(`📨 Brevo email sent to ${to} (id: ${response.data?.messageId || 'ok'})`);
+    return { ok: true, data: response.data };
   } catch (error) {
-    console.error('❌ Failed to send email via Brevo:', error.response?.data || error.message);
+    const detail = error.response?.data || error.message;
+    console.error('❌ Brevo send failed:', JSON.stringify(detail));
+    return { ok: false, error: detail };
   }
 };
+
+exports.isBrevoConfigured = () => Boolean(BREVO_API_KEY);
 
 /**
  * Sends a 6-digit OTP code to the user for password reset or email change.
@@ -77,7 +82,15 @@ exports.sendOTPVerificationEmail = async (email, otpCode, context = 'Password Re
     </div>
   `;
 
-  await sendBrevoEmail(email, subject, htmlContent);
+  const result = await sendBrevoEmail(email, subject, htmlContent);
+  if (!result.ok) {
+    throw new Error(
+      typeof result.error === 'string'
+        ? result.error
+        : JSON.stringify(result.error)
+    );
+  }
+  return result;
 };
 
 /**

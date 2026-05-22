@@ -103,6 +103,11 @@ app.use((err, req, res, next) => {
 // ==========================================
 const startServer = async () => {
   try {
+    const { cleanEnv } = require('./config/env');
+    const { isBrevoConfigured } = require('./services/emailService');
+    console.log(`📧 Brevo: ${isBrevoConfigured() ? 'configured' : 'MISSING BREVO_API_KEY'}`);
+    console.log(`🔐 JWT: ${cleanEnv('JWT_SECRET') ? 'set' : 'MISSING'}`);
+
     console.log('🔄 Checking database connection...');
     let authenticated = false;
     let retries = 15;
