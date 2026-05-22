@@ -6,12 +6,8 @@ require('dotenv').config();
 
 let connectionConfig;
 
-if (process.env.MYSQL_URL) {
-  // Use the connection string directly
-  connectionConfig = process.env.MYSQL_URL;
-  console.log('🚂 Using Railway MYSQL_URL');
-} else {
-  // Local fallback using individual vars
+if (process.env.MYSQLHOST || process.env.DB_HOST) {
+  // Prefer individual vars to avoid URL parsing issues with special characters in passwords
   connectionConfig = {
     host: process.env.DB_HOST || process.env.MYSQLHOST || 'localhost',
     port: parseInt(process.env.DB_PORT || process.env.MYSQLPORT || '3306'),
@@ -21,12 +17,27 @@ if (process.env.MYSQL_URL) {
     multipleStatements: true
   };
   console.log(`📍 Host: ${connectionConfig.host} | Port: ${connectionConfig.port} | DB: ${connectionConfig.database} | User: ${connectionConfig.user}`);
+} else if (process.env.MYSQL_URL) {
+  // Use the connection string directly
+  connectionConfig = process.env.MYSQL_URL;
+  console.log('🚂 Using Railway MYSQL_URL');
+} else {
+  // Local fallback using individual vars
+  connectionConfig = {
+    host: 'localhost',
+    port: 3306,
+    user: 'root',
+    password: '',
+    database: 'chgouri_db',
+    multipleStatements: true
+  };
+  console.log(`📍 Local fallback Host: ${connectionConfig.host} | Port: ${connectionConfig.port} | DB: ${connectionConfig.database}`);
 }
 
 // Sleep helper
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-async function connectWithRetry(config, maxRetries = 5, delayMs = 3000) {
+async function connectWithRetry(config, maxRetries = 20, delayMs = 4000) {
   for (let i = 1; i <= maxRetries; i++) {
     try {
       console.log(`🔄 Tentative ${i}/${maxRetries} de connexion au serveur MySQL...`);
@@ -40,11 +51,10 @@ async function connectWithRetry(config, maxRetries = 5, delayMs = 3000) {
           user: urlObj.username,
           password: urlObj.password,
           database: urlObj.pathname.replace('/', ''),
-          multipleStatements: true,
-          ssl: { rejectUnauthorized: false } // Crucial for Railway
+          multipleStatements: true
         };
       } else {
-        connOptions = { ...config, ssl: { rejectUnauthorized: false } };
+        connOptions = { ...config };
       }
       
       const conn = await mysql.createConnection(connOptions);

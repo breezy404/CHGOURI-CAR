@@ -13,21 +13,8 @@ const dbLogging = process.env.DB_LOGGING === 'true' ? console.log : false;
 
 let sequelize;
 
-if (process.env.DATABASE_URL || process.env.MYSQL_URL) {
-  sequelize = new Sequelize(process.env.DATABASE_URL || process.env.MYSQL_URL, {
-    dialect: 'mysql',
-    logging: dbLogging,
-    dialectOptions: {
-      ssl: {
-        rejectUnauthorized: false
-      }
-    },
-    define: {
-      timestamps: true,
-      underscored: true
-    }
-  });
-} else {
+// Always prefer individual variables to avoid URL parsing issues with special characters in passwords
+if (process.env.MYSQLHOST || process.env.DB_HOST) {
   sequelize = new Sequelize(dbName, dbUser, dbPass, {
     host: dbHost,
     port: dbPort,
@@ -39,6 +26,27 @@ if (process.env.DATABASE_URL || process.env.MYSQL_URL) {
       acquire: 30000,
       idle: 10000
     },
+    define: {
+      timestamps: true,
+      underscored: true
+    }
+  });
+} else if (process.env.DATABASE_URL || process.env.MYSQL_URL) {
+  sequelize = new Sequelize(process.env.DATABASE_URL || process.env.MYSQL_URL, {
+    dialect: 'mysql',
+    logging: dbLogging,
+    define: {
+      timestamps: true,
+      underscored: true
+    }
+  });
+} else {
+  // Local fallback
+  sequelize = new Sequelize(dbName, dbUser, dbPass, {
+    host: dbHost,
+    port: dbPort,
+    dialect: 'mysql',
+    logging: dbLogging,
     define: {
       timestamps: true,
       underscored: true
