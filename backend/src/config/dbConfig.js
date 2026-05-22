@@ -140,12 +140,20 @@ function getDbConfig() {
 
   if (isCloudRuntime || isProduction) {
     logEnvDiagnostics();
+    const unresolved = ['MYSQLHOST', 'MYSQLPASSWORD', 'DATABASE_URL', 'MYSQL_URL'].filter(
+      (k) => process.env[k] && String(process.env[k]).includes('${{')
+    );
+    if (unresolved.length) {
+      throw new Error(
+        `Unresolved Railway references on: ${unresolved.join(', ')}. ` +
+        'Raw Editor ${{MySQL-sH4F.*}} does NOT work — use plain values or UI "Add variable reference". ' +
+        'Paste: DATABASE_URL=mysql://root:PASSWORD@mysql-sh4f.railway.internal:3306/railway (no quotes, no ${{}}).'
+      );
+    }
     throw new Error(
       'Railway is NOT injecting MySQL variables into CHGOURI-CAR. ' +
-      'Open CHGOURI-CAR → Variables → Raw Editor → paste ALL lines below → Deploy:\n' +
-      'DATABASE_URL=mysql://root:YOUR_PASSWORD@mysql-sh4f.railway.internal:3306/railway\n' +
-      '(Or: MYSQLHOST, MYSQLPORT, MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE as plain values — not ${{refs}})\n' +
-      'Also: Project canvas → Connect MySQL service to CHGOURI-CAR.'
+      'Raw Editor: use plain DATABASE_URL=mysql://root:PASSWORD@mysql-sh4f.railway.internal:3306/railway ' +
+      '(no quotes, no ${{}}). Or Variables → Add variable reference (UI button, not typed ${{}}).'
     );
   }
 
