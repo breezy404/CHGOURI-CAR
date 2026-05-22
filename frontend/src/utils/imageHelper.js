@@ -1,5 +1,5 @@
 // Image URL formatting helper for hybrid local/Cloudinary support
-import { API_BASE_URL } from '../context/AuthContext';
+import { API_ROOT_URL } from '../config/api';
 
 /**
  * Formats a single image URL to work with both local uploads and Cloudinary URLs.
@@ -12,13 +12,7 @@ export const formatImageUrl = (url) => {
   }
   
   if (url.startsWith('/uploads')) {
-    try {
-      const urlObj = new URL(API_BASE_URL);
-      const rootUrl = `${urlObj.protocol}//${urlObj.host}`;
-      return `${rootUrl}${url}`;
-    } catch (e) {
-      return `http://localhost:5000${url}`;
-    }
+    return `${API_ROOT_URL}${url}`;
   }
   
   return url;
