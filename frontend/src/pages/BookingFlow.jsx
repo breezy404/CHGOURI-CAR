@@ -311,6 +311,7 @@ export default function BookingFlow() {
                         type="text"
                         value={formData.pickupLocation}
                         onChange={(e) => setFormData(prev => ({ ...prev, pickupLocation: e.target.value }))}
+                        placeholder="Ex : Massira 1"
                         required
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-sm font-semibold focus:outline-none focus:border-brand-blue"
                       />
@@ -325,6 +326,7 @@ export default function BookingFlow() {
                         type="text"
                         value={formData.returnLocation}
                         onChange={(e) => setFormData(prev => ({ ...prev, returnLocation: e.target.value }))}
+                        placeholder="Ex : Mhamid"
                         required
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-sm font-semibold focus:outline-none focus:border-brand-blue"
                       />
