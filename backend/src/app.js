@@ -105,7 +105,8 @@ const startServer = async () => {
   try {
     const { cleanEnv } = require('./config/env');
     const { isBrevoConfigured } = require('./services/emailService');
-    console.log(`📧 Brevo: ${isBrevoConfigured() ? 'configured' : 'MISSING BREVO_API_KEY'}`);
+    const sender = cleanEnv('SMTP_FROM_EMAIL', 'zakariaoukhamou11@gmail.com');
+    console.log(`📧 Brevo: ${isBrevoConfigured() ? 'configured' : 'MISSING BREVO_API_KEY'} | From: ${sender}`);
     console.log(`🔐 JWT: ${cleanEnv('JWT_SECRET') ? 'set' : 'MISSING'}`);
 
     console.log('🔄 Checking database connection...');

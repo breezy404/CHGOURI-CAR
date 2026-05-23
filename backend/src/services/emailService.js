@@ -8,7 +8,7 @@ const { cleanEnv } = require('../config/env');
 loadEnv();
 
 const BREVO_API_KEY = cleanEnv('BREVO_API_KEY');
-const SENDER_EMAIL = cleanEnv('SMTP_FROM_EMAIL', 'chgouricar@gmail.com');
+const SENDER_EMAIL = cleanEnv('SMTP_FROM_EMAIL', 'zakariaoukhamou11@gmail.com');
 const SENDER_NAME = cleanEnv('SMTP_FROM_NAME', 'CHGOURI CAR Marrakech');
 const LOGO_URL = 'https://res.cloudinary.com/dvppe25pp/image/upload/v1779306384/chgouri-car/assets/logo.png';
 
@@ -40,7 +40,7 @@ const sendBrevoEmail = async (to, subject, htmlContent, attachment = null) => {
         Accept: 'application/json'
       }
     });
-    console.log(`📨 Brevo email sent to ${to} (id: ${response.data?.messageId || 'ok'})`);
+    console.log(`📨 Brevo email sent from ${SENDER_EMAIL} to ${to} (id: ${response.data?.messageId || 'ok'})`);
     return { ok: true, data: response.data };
   } catch (error) {
     const detail = error.response?.data || error.message;
@@ -194,7 +194,7 @@ exports.sendBookingConfirmationEmail = async (booking, pdfBuffer) => {
       <div style="background-color: #f1f5f9; padding: 20px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0;">
         <p style="margin: 0; font-weight: bold; color: #64748b;">CHGOURI CAR - Marrakech, Maroc</p>
         <p style="margin: 5px 0 0 0;">Tél : +212 6 61 90 18 73 | +212 6 67 94 73 81</p>
-        <p style="margin: 5px 0 0 0;">Email : chgouricar@gmail.com | Site : www.chgouricar.com</p>
+        <p style="margin: 5px 0 0 0;">Email : zakariaoukhamou11@gmail.com | Site : www.chgouricar.com</p>
       </div>
     </div>
   `;
@@ -298,7 +298,7 @@ exports.sendBookingRequestEmail = async (booking, days) => {
 exports.sendAdminNewBookingEmail = async (booking, days) => {
   const { User } = require('../models');
   const adminUser = await User.findOne({ where: { role: 'admin' } });
-  const adminEmail = adminUser ? adminUser.email : (process.env.SMTP_FROM_EMAIL || 'zakariaoukhamou11@gmail.com');
+  const adminEmail = adminUser ? adminUser.email : SENDER_EMAIL;
 
   const carName = booking.car ? `${booking.car.brand} ${booking.car.model}` : 'Véhicule';
   
@@ -422,7 +422,7 @@ exports.sendStatusUpdateEmail = async (booking, newStatus) => {
 exports.sendAdminNewContactMessageEmail = async (contactMessage) => {
   const { User } = require('../models');
   const adminUser = await User.findOne({ where: { role: 'admin' } });
-  const adminEmail = adminUser ? adminUser.email : (process.env.SMTP_FROM_EMAIL || 'zakariaoukhamou11@gmail.com');
+  const adminEmail = adminUser ? adminUser.email : SENDER_EMAIL;
   
   const subject = `📧 NOUVEAU MESSAGE : ${contactMessage.subject}`;
 
