@@ -22,6 +22,9 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Railway / Vercel sit behind a reverse proxy (X-Forwarded-For)
+app.set('trust proxy', 1);
+
 // ==========================================
 // SECURITY & OPTIMIZATION MIDDLEWARES
 // ==========================================
