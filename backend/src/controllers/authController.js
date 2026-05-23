@@ -162,7 +162,8 @@ exports.verifyOTP = async (req, res) => {
  */
 exports.resetPassword = async (req, res) => {
   try {
-    const { email, otp, newPassword } = req.body;
+    const email = String(req.body.email || '').trim().toLowerCase();
+    const { otp, newPassword } = req.body;
     if (!email || !otp || !newPassword) return res.status(400).json({ success: false, message: 'Tous les champs sont requis.' });
 
     const user = await User.findOne({ where: { email, otpCode: otp } });
