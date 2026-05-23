@@ -22,8 +22,8 @@ export default function BookingFlow() {
     customerEmail: '',
     pickupDate: '',
     returnDate: '',
-    pickupLocation: 'Aéroport de Marrakech-Ménara',
-    returnLocation: 'Aéroport de Marrakech-Ménara'
+    pickupLocation: '',
+    returnLocation: ''
   });
 
   // State Management
@@ -311,7 +311,6 @@ export default function BookingFlow() {
                         type="text"
                         value={formData.pickupLocation}
                         onChange={(e) => setFormData(prev => ({ ...prev, pickupLocation: e.target.value }))}
-                        placeholder="Ex: Aéroport de Marrakech-Ménara"
                         required
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-sm font-semibold focus:outline-none focus:border-brand-blue"
                       />
@@ -326,7 +325,6 @@ export default function BookingFlow() {
                         type="text"
                         value={formData.returnLocation}
                         onChange={(e) => setFormData(prev => ({ ...prev, returnLocation: e.target.value }))}
-                        placeholder="Ex: Aéroport de Marrakech-Ménara"
                         required
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-sm font-semibold focus:outline-none focus:border-brand-blue"
                       />
