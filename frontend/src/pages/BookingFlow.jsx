@@ -22,8 +22,8 @@ export default function BookingFlow() {
     customerEmail: '',
     pickupDate: '',
     returnDate: '',
-    pickupLocation: 'Aéroport de Marrakech-Ménara ✈️',
-    returnLocation: 'Aéroport de Marrakech-Ménara ✈️'
+    pickupLocation: 'Aéroport de Marrakech-Ménara',
+    returnLocation: 'Aéroport de Marrakech-Ménara'
   });
 
   // State Management
@@ -307,17 +307,14 @@ export default function BookingFlow() {
                     <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Lieu de livraison</label>
                     <div className="relative">
                       <MapPin className="absolute left-3.5 top-3.5 text-slate-400" size={16} />
-                      <select
+                      <input
+                        type="text"
                         value={formData.pickupLocation}
                         onChange={(e) => setFormData(prev => ({ ...prev, pickupLocation: e.target.value }))}
+                        placeholder="Ex: Aéroport de Marrakech-Ménara"
                         required
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-sm font-semibold focus:outline-none focus:border-brand-blue"
-                      >
-                        <option value="Aéroport de Marrakech-Ménara ✈️">Aéroport de Marrakech-Ménara ✈️</option>
-                        <option value="Gare Ferroviaire de Marrakech 🚊">Gare Ferroviaire de Marrakech 🚊</option>
-                        <option value="Gueliz Centre-ville 🏢">Gueliz Centre-ville 🏢</option>
-                        <option value="Livraison Hôtel / Riad 🏨">Livraison Hôtel / Riad 🏨</option>
-                      </select>
+                      />
                     </div>
                   </div>
 
@@ -325,17 +322,14 @@ export default function BookingFlow() {
                     <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Lieu de récupération</label>
                     <div className="relative">
                       <MapPin className="absolute left-3.5 top-3.5 text-slate-400" size={16} />
-                      <select
+                      <input
+                        type="text"
                         value={formData.returnLocation}
                         onChange={(e) => setFormData(prev => ({ ...prev, returnLocation: e.target.value }))}
+                        placeholder="Ex: Aéroport de Marrakech-Ménara"
                         required
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-sm font-semibold focus:outline-none focus:border-brand-blue"
-                      >
-                        <option value="Aéroport de Marrakech-Ménara ✈️">Aéroport de Marrakech-Ménara ✈️</option>
-                        <option value="Gare Ferroviaire de Marrakech 🚊">Gare Ferroviaire de Marrakech 🚊</option>
-                        <option value="Gueliz Centre-ville 🏢">Gueliz Centre-ville 🏢</option>
-                        <option value="Récupération Hôtel / Riad 🏨">Récupération Hôtel / Riad 🏨</option>
-                      </select>
+                      />
                     </div>
                   </div>
                 </div>

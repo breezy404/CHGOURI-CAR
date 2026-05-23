@@ -20,6 +20,7 @@ export default {
       },
       fontFamily: {
         sans: ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
+        admin: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         premium: '0 8px 30px rgb(0, 0, 0, 0.04)',
