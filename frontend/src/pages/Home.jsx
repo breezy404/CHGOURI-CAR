@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useLanguage } from '../context/LanguageContext';
-import { Calendar, MapPin, Sparkles, Shield, Compass, ChevronDown, Check } from 'lucide-react';
+import { Calendar, MapPin, Sparkles, Shield, Compass, ChevronDown, Check, CheckCircle2, Award } from 'lucide-react';
 import { API_BASE_URL } from '../context/AuthContext';
 import { normalizeImages } from '../utils/imageHelper';
 
@@ -310,6 +310,113 @@ export default function Home() {
 
           </div>
 
+        </div>
+      </div>
+
+      {/* 1.7 About / Marketing Presentation Section */}
+      <div className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Left Column: Handover Image with Red Border & Badge */}
+            <div className="lg:col-span-6 relative flex justify-center">
+              <div className="relative p-4 w-full max-w-lg lg:max-w-none">
+                {/* Red Frame Border */}
+                <div className="border-[8px] border-brand-red rounded-[2.5rem] p-3 relative overflow-hidden bg-white shadow-premium">
+                  <img
+                    src="/car_key_handover.png"
+                    alt="CHGOURI CAR Key Handover Marrakech"
+                    className="w-full h-auto object-cover rounded-[2rem] shadow-md aspect-[4/3] lg:aspect-square max-h-[420px] lg:max-h-[480px]"
+                  />
+                </div>
+                
+                {/* Badge Overlay */}
+                <div className="absolute -top-1 -left-1 sm:-top-2 sm:-left-2 z-20 bg-slate-900 text-white rounded-2xl p-4 shadow-xl flex items-center gap-3 border border-slate-800">
+                  <div className="p-2.5 bg-brand-red rounded-xl text-white flex items-center justify-center">
+                    <Award size={20} />
+                  </div>
+                  <div className="flex flex-col text-left">
+                    <span className="text-[10px] text-slate-400 font-bold tracking-wider uppercase leading-none mb-1">
+                      {t('marketingBadgeLine1')}
+                    </span>
+                    <span className="text-xs sm:text-sm font-extrabold text-white tracking-tight leading-none">
+                      {t('marketingBadgeLine2')}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Information Content */}
+            <div className="lg:col-span-6 space-y-6 text-left lg:pl-6">
+              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+                {locale === 'fr' ? (
+                  <>
+                    <span className="text-brand-blue">CHGOURI CAR</span> : Location Voiture <span className="text-brand-red">Marrakech</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-brand-blue">CHGOURI CAR</span>: Car Rental <span className="text-brand-red">Marrakech</span>
+                  </>
+                )}
+              </h2>
+              
+              <p className="text-slate-500 text-sm md:text-base font-medium leading-relaxed max-w-xl">
+                {t('marketingAboutSubtitle')}
+              </p>
+              
+              {/* Bullet Points */}
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 size={20} className="text-brand-red shrink-0 mt-0.5" />
+                  <span className="text-xs sm:text-sm md:text-base leading-normal">
+                    <strong className="text-slate-900 font-extrabold">
+                      {t('marketingBullet1').split(':')[0]}:
+                    </strong>
+                    <span className="text-slate-500 font-medium">
+                      {t('marketingBullet1').split(':')[1]}
+                    </span>
+                  </span>
+                </li>
+                
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 size={20} className="text-brand-red shrink-0 mt-0.5" />
+                  <span className="text-xs sm:text-sm md:text-base leading-normal">
+                    <strong className="text-slate-900 font-extrabold">
+                      {t('marketingBullet2').split(':')[0]}:
+                    </strong>
+                    <span className="text-slate-500 font-medium">
+                      {t('marketingBullet2').split(':')[1]}
+                    </span>
+                  </span>
+                </li>
+                
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 size={20} className="text-brand-red shrink-0 mt-0.5" />
+                  <span className="text-xs sm:text-sm md:text-base leading-normal">
+                    <strong className="text-slate-900 font-extrabold">
+                      {t('marketingBullet3').split(':')[0]}:
+                    </strong>
+                    <span className="text-slate-500 font-medium">
+                      {t('marketingBullet3').split(':')[1]}
+                    </span>
+                  </span>
+                </li>
+              </ul>
+              
+              {/* CTA Button */}
+              <div className="pt-4">
+                <button
+                  onClick={() => navigate('/about')}
+                  className="group bg-brand-red hover:bg-brand-redAccent text-white font-extrabold text-xs px-6 py-4 rounded-xl transition-all shadow-lg shadow-brand-red/20 uppercase tracking-wider flex items-center gap-2"
+                >
+                  <span>{t('marketingBtnMore')}</span>
+                  <span className="transition-transform group-hover:translate-x-1 duration-300">→</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
 

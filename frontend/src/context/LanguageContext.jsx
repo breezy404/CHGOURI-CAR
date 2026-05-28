@@ -106,6 +106,16 @@ const translations = {
     aboutQualityTitle: "Qualité & Fiabilité Garanties",
     aboutQualityDesc: "Tous nos véhicules font l'objet de contrôles de sécurité rigoureux avant chaque départ. Nous renouvelons régulièrement notre flotte pour vous offrir des modèles récents avec climatisation, confort moderne et sécurité optimale.",
 
+    // Marketing Section
+    marketingAboutTitle: "CHGOURI CAR : Location Voiture Marrakech",
+    marketingAboutSubtitle: "Agence de location de voitures de confiance basée à Marrakech, offrant un service de qualité supérieure avec livraison et récupération gratuites dans toute la ville de Marrakech et à l'Aéroport.",
+    marketingBullet1: "Assurance tout risque : Formules flexibles adaptées.",
+    marketingBullet2: "Kilométrages : Illimités pour tous vos déplacements au Maroc.",
+    marketingBullet3: "Livraison & Récupération : Aéroport et Hôtels de Marrakech 100% gratuits.",
+    marketingBadgeLine1: "Assistance 24h/7j",
+    marketingBadgeLine2: "Service Qualité",
+    marketingBtnMore: "Plus d'infos",
+
     // Services (Common & Home)
     servicesTitle: "Nos Services Premium",
     servicesSubtitle: "Découvrez notre gamme complète d'offres conçues pour votre confort de voyage.",
@@ -259,6 +269,16 @@ const translations = {
     aboutExperienceDesc: "Thanks to our passionate team of professionals, we provide personalized guidance and advice to make your stay exceptional. Whether you need a compact city car or guided sightseeing tours, we are here for you.",
     aboutQualityTitle: "Guaranteed Quality & Reliability",
     aboutQualityDesc: "All our vehicles undergo strict safety inspections before every rental. We regularly renew our fleet to offer brand-new models equipped with A/C, modern comforts, and top-tier safety.",
+
+    // Marketing Section
+    marketingAboutTitle: "CHGOURI CAR: Car Rental Marrakech",
+    marketingAboutSubtitle: "Trusted car rental agency based in Marrakech, offering top-quality services with free pickup and delivery across Marrakech and at the Airport.",
+    marketingBullet1: "Comprehensive insurance: Flexible tailored plans.",
+    marketingBullet2: "Mileage: Unlimited mileage for your journeys in Morocco.",
+    marketingBullet3: "Delivery & Return: Marrakech Airport & Hotels 100% free.",
+    marketingBadgeLine1: "24/7 Assistance",
+    marketingBadgeLine2: "Quality Service",
+    marketingBtnMore: "More info",
 
     // Services (Common & Home)
     servicesTitle: "Our Premium Services",
