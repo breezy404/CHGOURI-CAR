@@ -28,7 +28,7 @@ const translations = {
     pickupDateLabel: "Date de départ",
     dropoffDateLabel: "Date de retour",
     searchBtn: "Rechercher",
-    
+
     // Values
     valAirport: "Aéroport de Marrakech-Ménara",
     valAgency: "Agence Centre-Ville",
@@ -69,24 +69,24 @@ const translations = {
     step4Title: "Vos Infos",
     step5Title: "Paiement",
     step6Title: "Confirmation",
-    
+
     bookingSummary: "Résumé de la réservation",
     btnNext: "Suivant",
     btnBack: "Retour",
     btnPay: "Procéder au Paiement",
-    
+
     gpsOption: "GPS Nouvelle Génération (+50 DH/jour)",
     babySeatOption: "Siège Bébé Premium (+50 DH/jour)",
     extraDriverOption: "Conducteur Supplémentaire (+100 DH unique)",
-    
+
     formName: "Nom Complet",
     formEmail: "Adresse E-mail",
     formPhone: "Numéro de Téléphone (WhatsApp)",
     formLicense: "Numéro de Permis de Conduire",
-    
+
     payFull: "Payer 100% de la réservation en ligne",
     payDeposit: "Payer 30% d'acompte en ligne (Reste à la livraison)",
-    
+
     // Booking confirmation
     confirmSuccessTitle: "Paiement Réussi & Réservation Confirmée !",
     confirmSuccessDesc: "Un e-mail de confirmation contenant votre facture PDF vient de vous être envoyé. Merci pour votre confiance !",
@@ -113,7 +113,7 @@ const translations = {
     marketingBullet2: "Kilométrages : Illimités pour tous vos déplacements au Maroc.",
     marketingBullet3: "Livraison & Récupération : Aéroport et Hôtels de Marrakech 100% gratuits.",
     marketingBadgeLine1: "Assistance 24h/7j",
-    marketingBadgeLine2: "Service Qualité",
+    marketingBadgeLine2: "+20 ans",
     marketingBtnMore: "Plus d'infos",
 
     // Services (Common & Home)
@@ -123,7 +123,7 @@ const translations = {
     serviceRentalDesc: "Profitez d'un large choix de citadines et de routières à prix imbattables avec kilométrage illimité et assurance tout compris.",
     serviceCircuitsTitle: "Circuits Touristiques",
     serviceCircuitsDesc: "Explorez les plus beaux paysages du Maroc à travers nos excursions sur mesure au départ de Marrakech.",
-    
+
     // Tourist Circuits
     circuitsTitle: "Excursions & Circuits Touristiques",
     circuitsSubtitle: "Réservez des aventures exceptionnelles encadrées par des guides professionnels agréés.",
@@ -277,7 +277,7 @@ const translations = {
     marketingBullet2: "Mileage: Unlimited mileage for your journeys in Morocco.",
     marketingBullet3: "Delivery & Return: Marrakech Airport & Hotels 100% free.",
     marketingBadgeLine1: "24/7 Assistance",
-    marketingBadgeLine2: "Quality Service",
+    marketingBadgeLine2: "+20 years",
     marketingBtnMore: "More info",
 
     // Services (Common & Home)
@@ -287,7 +287,7 @@ const translations = {
     serviceRentalDesc: "Enjoy a wide selection of city and highway cars at unbeatable rates with unlimited mileage and comprehensive insurance.",
     serviceCircuitsTitle: "Tourist Circuits",
     serviceCircuitsDesc: "Explore the most beautiful landscapes of Morocco through our custom excursions departing from Marrakech.",
-    
+
     // Tourist Circuits
     circuitsTitle: "Tourist Tours & Excursions",
     circuitsSubtitle: "Book outstanding adventures led by certified professional guides.",

@@ -32,8 +32,10 @@ router.post('/', protect, restrictTo('admin'), (req, res) => {
       });
     }
 
-    // Map Cloudinary secure URLs
-    const imageUrls = req.files.map(file => file.path);
+    // Map Cloudinary secure URLs or local paths
+    const imageUrls = req.files.map(file => {
+      return file.path && file.path.startsWith('http') ? file.path : `/uploads/${file.filename}`;
+    });
 
     return res.status(200).json({
       success: true,

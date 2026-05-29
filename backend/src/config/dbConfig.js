@@ -2,7 +2,7 @@ const { isRailwayRuntime } = require('./loadEnv');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isRailway = isRailwayRuntime();
-const isCloudRuntime = isRailway || Boolean(process.env.PORT);
+const isCloudRuntime = isRailway || (isProduction && Boolean(process.env.PORT));
 
 // Internal Railway MySQL host (from your MySQL service — not a secret)
 const RAILWAY_INTERNAL_HOST = 'mysql-sh4f.railway.internal';

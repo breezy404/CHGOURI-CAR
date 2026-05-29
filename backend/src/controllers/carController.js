@@ -110,7 +110,9 @@ exports.createCar = async (req, res) => {
 
     let finalImageUrl = imageUrl || '';
     if (req.files && req.files.length > 0) {
-      const fileUrls = req.files.map(file => file.path);
+      const fileUrls = req.files.map(file => {
+        return file.path && file.path.startsWith('http') ? file.path : `/uploads/${file.filename}`;
+      });
       finalImageUrl = JSON.stringify(fileUrls);
     }
 
@@ -132,7 +134,7 @@ exports.createCar = async (req, res) => {
       pricePerWeek: pricePerWeek ? parseFloat(pricePerWeek) : 0,
       pricePerMonth: pricePerMonth ? parseFloat(pricePerMonth) : 0,
       imageUrl: finalImageUrl,
-      features: parsedFeatures,
+      features: Array.isArray(parsedFeatures) ? parsedFeatures.join(', ') : String(parsedFeatures),
       status: 'active'
     });
 
@@ -169,7 +171,9 @@ exports.updateCar = async (req, res) => {
 
     let finalImageUrl = imageUrl;
     if (req.files && req.files.length > 0) {
-      const fileUrls = req.files.map(file => file.path);
+      const fileUrls = req.files.map(file => {
+        return file.path && file.path.startsWith('http') ? file.path : `/uploads/${file.filename}`;
+      });
       finalImageUrl = JSON.stringify(fileUrls);
     }
 
@@ -193,7 +197,7 @@ exports.updateCar = async (req, res) => {
       pricePerWeek: pricePerWeek !== undefined && pricePerWeek !== '' ? parseFloat(pricePerWeek) : car.pricePerWeek,
       pricePerMonth: pricePerMonth !== undefined && pricePerMonth !== '' ? parseFloat(pricePerMonth) : car.pricePerMonth,
       imageUrl: finalImageUrl !== undefined ? finalImageUrl : car.imageUrl,
-      features: parsedFeatures !== undefined ? parsedFeatures : car.features,
+      features: parsedFeatures !== undefined ? (Array.isArray(parsedFeatures) ? parsedFeatures.join(', ') : String(parsedFeatures)) : car.features,
       status: status !== undefined ? status : car.status
     });
 

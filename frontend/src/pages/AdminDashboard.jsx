@@ -20,9 +20,88 @@ import {
   MapPin, 
   User, 
   Phone, 
-  SlidersHorizontal 
+  SlidersHorizontal,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import OTPInput from '../components/OTPInput';
+
+function AdminCarCard({ car, startEditCar, handleDeleteCar }) {
+  const [activeImgIndex, setActiveImgIndex] = useState(0);
+  const images = normalizeImages(car.imageUrl);
+
+  const handleNextImage = (e) => {
+    e.stopPropagation();
+    setActiveImgIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const handlePrevImage = (e) => {
+    e.stopPropagation();
+    setActiveImgIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  return (
+    <div className="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+      <div className="relative h-40 bg-slate-50 border-b border-slate-100 overflow-hidden">
+        <img
+          src={images[activeImgIndex]}
+          alt={car.brand}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        {images.length > 1 && (
+          <>
+            <button 
+              type="button"
+              onClick={handlePrevImage}
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-slate-800 p-1 rounded-full z-20 shadow backdrop-blur-sm transition-all"
+            >
+              <ChevronLeft size={14} />
+            </button>
+            <button 
+              type="button"
+              onClick={handleNextImage}
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-slate-800 p-1 rounded-full z-20 shadow backdrop-blur-sm transition-all"
+            >
+              <ChevronRight size={14} />
+            </button>
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-20">
+              {images.map((_, idx) => (
+                <div 
+                  key={idx} 
+                  className={`h-1 w-1 rounded-full transition-all ${
+                    idx === activeImgIndex ? 'bg-brand-red w-2.5' : 'bg-slate-300'
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+      <div className="p-4 space-y-4">
+        <div>
+          <h4 className="font-black text-slate-900 text-sm">{car.brand} {car.model}</h4>
+        </div>
+
+        <div className="flex gap-2 pt-2 border-t border-slate-50">
+          <button
+            onClick={() => startEditCar(car)}
+            className="flex-grow flex items-center justify-center gap-1 text-slate-600 bg-slate-100 hover:bg-slate-200/80 py-2 rounded-xl text-[10px] font-extrabold transition-all"
+          >
+            <Edit size={12} />
+            Modifier
+          </button>
+          <button
+            onClick={() => handleDeleteCar(car.id)}
+            className="flex-grow flex items-center justify-center gap-1 text-brand-red bg-red-50 hover:bg-red-100 py-2 rounded-xl text-[10px] font-extrabold transition-all"
+          >
+            <Trash2 size={12} />
+            Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function AdminDashboard() {
   const { user, token } = useAuth();
@@ -636,35 +715,12 @@ export default function AdminDashboard() {
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {fleet.map(car => (
-                      <div key={car.id} className="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
-                        <img
-                          src={getFirstCarImage(car.imageUrl)}
-                          alt={car.brand}
-                          className="w-full h-40 object-cover bg-slate-50 border-b border-slate-100"
-                        />
-                        <div className="p-4 space-y-4">
-                          <div>
-                            <h4 className="font-black text-slate-900 text-sm">{car.brand} {car.model}</h4>
-                          </div>
-
-                          <div className="flex gap-2 pt-2 border-t border-slate-50">
-                            <button
-                              onClick={() => startEditCar(car)}
-                              className="flex-grow flex items-center justify-center gap-1 text-slate-600 bg-slate-100 hover:bg-slate-200/80 py-2 rounded-xl text-[10px] font-extrabold transition-all"
-                            >
-                              <Edit size={12} />
-                              Modifier
-                            </button>
-                            <button
-                              onClick={() => handleDeleteCar(car.id)}
-                              className="flex-grow flex items-center justify-center gap-1 text-brand-red bg-red-50 hover:bg-red-100 py-2 rounded-xl text-[10px] font-extrabold transition-all"
-                            >
-                              <Trash2 size={12} />
-                              Supprimer
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                      <AdminCarCard 
+                        key={car.id} 
+                        car={car} 
+                        startEditCar={startEditCar} 
+                        handleDeleteCar={handleDeleteCar} 
+                      />
                     ))}
                   </div>
                 )}
