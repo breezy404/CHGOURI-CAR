@@ -30,7 +30,7 @@ const translations = {
     searchBtn: "Rechercher",
 
     // Values
-    valAirport: "Aéroport de Marrakech-Ménara",
+    valAirport: "Aéroport ",
     valAgency: "Agence Centre-Ville",
     valHotel: "Livraison à votre Hôtel",
 
@@ -194,7 +194,7 @@ const translations = {
     searchBtn: "Search",
 
     // Values
-    valAirport: "Marrakech-Menara Airport",
+    valAirport: "Airport",
     valAgency: "City Center Agency",
     valHotel: "Hotel Delivery",
 

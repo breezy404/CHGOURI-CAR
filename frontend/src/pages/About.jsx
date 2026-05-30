@@ -26,34 +26,34 @@ export default function About() {
     }
   ];
 
-  const circuits = [
-    {
-      title: t('circuitMarrakechTitle'),
-      desc: t('circuitMarrakechDesc'),
-      icon: <Landmark size={20} className="text-white" />,
-      image: "https://images.unsplash.com/photo-1597212618440-806262de4fe6?auto=format&fit=crop&q=80&w=800",
-      whatsappUrl: "https://wa.me/212661901873?text=Bonjour,%20je%20souhaite%20réserver%20le%20circuit%20Marrakech%20City%20Tour."
-    },
-    {
-      title: t('circuitDesertTitle'),
-      desc: t('circuitDesertDesc'),
-      icon: <Compass size={20} className="text-white" />,
-      image: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&q=80&w=800",
-      whatsappUrl: "https://wa.me/212661901873?text=Bonjour,%20je%20souhaite%20réserver%20le%20circuit%20Excursion%20Désert."
-    },
-    {
-      title: t('circuitAtlasTitle'),
-      desc: t('circuitAtlasDesc'),
-      icon: <Mountain size={20} className="text-white" />,
-      image: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&q=80&w=800",
-      whatsappUrl: "https://wa.me/212661901873?text=Bonjour,%20je%20souhaite%20réserver%20le%20circuit%20Aventure%20dans%20l%27Atlas."
-    }
-  ];
+  // const circuits = [
+  //   {
+  //     title: t('circuitMarrakechTitle'),
+  //     desc: t('circuitMarrakechDesc'),
+  //     icon: <Landmark size={20} className="text-white" />,
+  //     image: "https://images.unsplash.com/photo-1597212618440-806262de4fe6?auto=format&fit=crop&q=80&w=800",
+  //     whatsappUrl: "https://wa.me/212661901873?text=Bonjour,%20je%20souhaite%20réserver%20le%20circuit%20Marrakech%20City%20Tour."
+  //   },
+  //   {
+  //     title: t('circuitDesertTitle'),
+  //     desc: t('circuitDesertDesc'),
+  //     icon: <Compass size={20} className="text-white" />,
+  //     image: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&q=80&w=800",
+  //     whatsappUrl: "https://wa.me/212661901873?text=Bonjour,%20je%20souhaite%20réserver%20le%20circuit%20Excursion%20Désert."
+  //   },
+  //   {
+  //     title: t('circuitAtlasTitle'),
+  //     desc: t('circuitAtlasDesc'),
+  //     icon: <Mountain size={20} className="text-white" />,
+  //     image: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&q=80&w=800",
+  //     whatsappUrl: "https://wa.me/212661901873?text=Bonjour,%20je%20souhaite%20réserver%20le%20circuit%20Aventure%20dans%20l%27Atlas."
+  //   }
+  // ];
 
   return (
     <div className="bg-slate-50 min-h-screen py-12 md:py-20 text-left">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
-        
+
         {/* Page Header Title */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
           <span className="text-brand-blue font-extrabold text-xs uppercase tracking-widest bg-brand-blue/10 px-3.5 py-1.5 rounded-full inline-block">
@@ -79,7 +79,7 @@ export default function About() {
             <p className="text-slate-500 text-sm md:text-base leading-relaxed font-medium">
               {t('aboutExperienceDesc')}
             </p>
-            
+
             {/* Checks list */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               <div className="flex items-center gap-2 font-bold text-slate-800 text-xs md:text-sm">
@@ -104,9 +104,9 @@ export default function About() {
           {/* Elegant Collage Illustration */}
           <div className="relative group">
             <div className="absolute -inset-2 bg-gradient-to-r from-brand-blue to-brand-red rounded-3xl blur-lg opacity-10 group-hover:opacity-20 transition duration-1000"></div>
-            <img 
-              src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&q=80&w=800" 
-              alt="CHGOURI CAR Luxury Fleet" 
+            <img
+              src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&q=80&w=800"
+              alt="CHGOURI CAR Luxury Fleet"
               className="rounded-2xl shadow-xl w-full object-cover h-[350px] relative z-10 border border-slate-100"
             />
           </div>
@@ -122,7 +122,7 @@ export default function About() {
               La garantie d'un voyage serein et sécurisé au Maroc
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4">
             {guarantees.map((g, idx) => (
               <div key={idx} className="space-y-3 p-4 hover:bg-slate-50 rounded-2xl transition-all">
@@ -151,7 +151,7 @@ export default function About() {
           </div>
 
           {/* Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-6">
+          {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-6">
             {circuits.map((c, idx) => (
               <div key={idx} className="bg-white rounded-3xl overflow-hidden shadow-premium border border-slate-100 flex flex-col justify-between hover:shadow-xl transition-all group">
                 <div className="relative h-48 overflow-hidden">
@@ -188,10 +188,10 @@ export default function About() {
                 </div>
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
 
       </div>
-    </div>
+    </div >
   );
 }

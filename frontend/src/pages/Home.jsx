@@ -23,8 +23,8 @@ export default function Home() {
     nextWeek.setDate(nextWeek.getDate() + 7);
     return nextWeek.toISOString().split('T')[0];
   });
-  const [pickupLocation, setPickupLocation] = useState('Aéroport de Marrakech-Ménara');
-  const [dropoffLocation, setDropoffLocation] = useState('Aéroport de Marrakech-Ménara');
+  const [pickupLocation, setPickupLocation] = useState('Aéroport ');
+  const [dropoffLocation, setDropoffLocation] = useState('Aéroport ');
 
   // Car fleet state
   const [cars, setCars] = useState([]);
@@ -64,8 +64,8 @@ export default function Home() {
 
   const faqs = [
     {
-      q: "Comment se déroule la livraison à l'Aéroport de Marrakech ?",
-      a: "La livraison est 100% gratuite et simplifiée. Un agent CHGOURI CAR vous attendra à la sortie du terminal des arrivées de l'Aéroport de Marrakech-Ménara avec une pancarte à votre nom. Les formalités du contrat de location et le paiement du solde se feront sur place en moins de 10 minutes."
+      q: "Comment se déroule la livraison à l'Aéroport  ?",
+      a: "La livraison est 100% gratuite et simplifiée. Un agent CHGOURI CAR vous attendra à la sortie du terminal des arrivées de l'Aéroport avec une pancarte à votre nom. Les formalités du contrat de location et le paiement du solde se feront sur place en moins de 10 minutes."
     },
     {
       q: "Quels sont les documents obligatoires à fournir ?",
@@ -74,16 +74,12 @@ export default function Home() {
     {
       q: "Puis-je annuler ma réservation gratuitement ?",
       a: "Oui, l'annulation de votre réservation est entièrement gratuite jusqu'à 48 heures avant l'heure prévue de prise en charge du véhicule. Vous serez intégralement remboursé de l'acompte versé."
-    },
-    {
-      q: "Comment fonctionne le système d'acompte de 30% ?",
-      a: "Afin de bloquer définitivement le véhicule dans notre calendrier, vous payez 30% du montant total de la location en ligne de manière sécurisée (simulation de la passerelle marocaine CMI). Les 70% restants seront à régler lors de la livraison à Marrakech en espèces (Dirhams / Euros) ou par carte bancaire."
     }
   ];
 
   return (
     <div className="relative">
-      
+
       {/* 1. Hero Section with dynamic background */}
       <div className="relative bg-slate-900 overflow-hidden min-h-[580px] flex items-center">
         {/* Background Image Overlay with brand styling */}
@@ -98,7 +94,7 @@ export default function Home() {
 
         {/* Content container */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
+
           {/* Main Titles */}
           <div className="lg:col-span-7 space-y-6 text-left">
             <div className="inline-flex items-center gap-1.5 bg-brand-red/10 border border-brand-red/20 rounded-full px-4 py-1.5 text-brand-red text-xs font-semibold uppercase tracking-wider">
@@ -129,20 +125,20 @@ export default function Home() {
 
             {/* CTA Buttons in Hero */}
             <div className="flex flex-wrap gap-4 pt-2">
-              <button 
+              <button
                 onClick={() => navigate('/vehicles')}
                 className="bg-brand-red hover:bg-brand-redAccent text-white font-extrabold text-xs px-6 py-3.5 rounded-xl transition-all shadow-lg shadow-brand-red/20 uppercase tracking-wider"
               >
                 Voir les véhicules
               </button>
-              <a 
+              <a
                 href="https://wa.me/212661901873?text=Bonjour,%20je%20souhaite%20louer%20un%20véhicule%20chez%20CHGOURI%20CAR%20à%20Marrakech."
-                target="_blank" 
+                target="_blank"
                 rel="noopener noreferrer"
                 className="whatsapp-pulse bg-green-500 hover:bg-green-600 text-white font-extrabold text-xs px-6 py-3.5 rounded-xl transition-all shadow-lg shadow-green-500/20 uppercase tracking-wider flex items-center gap-2"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.863-9.73.001-2.597-1.002-5.037-2.824-6.861-1.821-1.822-4.246-2.825-6.848-2.826-5.44.001-9.865 4.37-9.869 9.732-.001 1.761.472 3.483 1.371 5.002L1.997 22l6.237-1.635z"/>
+                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.863-9.73.001-2.597-1.002-5.037-2.824-6.861-1.821-1.822-4.246-2.825-6.848-2.826-5.44.001-9.865 4.37-9.869 9.732-.001 1.761.472 3.483 1.371 5.002L1.997 22l6.237-1.635z" />
                 </svg>
                 Contact WhatsApp
               </a>
@@ -161,7 +157,7 @@ export default function Home() {
               </h3>
 
               <div className="space-y-4">
-                
+
                 {/* Pickup Location */}
                 <div>
                   <label className="block text-xs font-bold uppercase text-slate-500 mb-1.5 tracking-wider">
@@ -251,7 +247,7 @@ export default function Home() {
       {/* 1.5 Services Showcase Section */}
       <div className="py-16 bg-white border-b border-slate-100 scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          
+
           <div className="text-center space-y-3">
             <span className="text-brand-blue font-extrabold text-xs uppercase tracking-widest bg-brand-blue/10 px-3.5 py-1.5 rounded-full inline-block">
               {t('servicesTitle')}
@@ -265,7 +261,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
-            
+
             {/* Service 1: Car Rental */}
             <div className="bg-slate-50 border border-slate-200/60 rounded-3xl p-8 flex flex-col justify-between hover:shadow-lg transition-all group text-left">
               <div className="space-y-4">
@@ -279,7 +275,7 @@ export default function Home() {
                   {t('serviceRentalDesc')}
                 </p>
               </div>
-              <button 
+              <button
                 onClick={() => navigate('/vehicles')}
                 className="btn-blue text-xs font-bold py-3.5 px-5 rounded-xl w-fit mt-6 uppercase tracking-wider flex items-center gap-1.5"
               >
@@ -300,7 +296,7 @@ export default function Home() {
                   {t('serviceCircuitsDesc')}
                 </p>
               </div>
-              <button 
+              <button
                 onClick={() => navigate('/about')}
                 className="btn-primary text-xs font-bold py-3.5 px-5 rounded-xl w-fit mt-6 uppercase tracking-wider flex items-center gap-1.5"
               >
@@ -317,7 +313,7 @@ export default function Home() {
       <div className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            
+
             {/* Left Column: Handover Image with Red Border & Badge */}
             <div className="lg:col-span-6 relative flex justify-center">
               <div className="relative p-4 w-full max-w-lg lg:max-w-none">
@@ -329,7 +325,7 @@ export default function Home() {
                     className="w-full h-auto object-cover rounded-[2rem] shadow-md aspect-[4/3] lg:aspect-square max-h-[420px] lg:max-h-[480px]"
                   />
                 </div>
-                
+
                 {/* Badge Overlay */}
                 <div className="absolute -top-1 -left-1 sm:-top-2 sm:-left-2 z-20 bg-slate-900 text-white rounded-2xl p-4 shadow-xl flex items-center gap-3 border border-slate-800">
                   <div className="p-2.5 bg-brand-red rounded-xl text-white flex items-center justify-center">
@@ -360,11 +356,11 @@ export default function Home() {
                   </>
                 )}
               </h2>
-              
+
               <p className="text-slate-500 text-sm md:text-base font-medium leading-relaxed max-w-xl">
                 {t('marketingAboutSubtitle')}
               </p>
-              
+
               {/* Bullet Points */}
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
@@ -378,7 +374,7 @@ export default function Home() {
                     </span>
                   </span>
                 </li>
-                
+
                 <li className="flex items-start gap-3">
                   <CheckCircle2 size={20} className="text-brand-red shrink-0 mt-0.5" />
                   <span className="text-xs sm:text-sm md:text-base leading-normal">
@@ -390,7 +386,7 @@ export default function Home() {
                     </span>
                   </span>
                 </li>
-                
+
                 <li className="flex items-start gap-3">
                   <CheckCircle2 size={20} className="text-brand-red shrink-0 mt-0.5" />
                   <span className="text-xs sm:text-sm md:text-base leading-normal">
@@ -403,7 +399,7 @@ export default function Home() {
                   </span>
                 </li>
               </ul>
-              
+
               {/* CTA Button */}
               <div className="pt-4">
                 <button
@@ -441,8 +437,8 @@ export default function Home() {
             {cars.map((car) => {
               let carFeatures = [];
               try {
-                carFeatures = Array.isArray(car.features) 
-                  ? car.features 
+                carFeatures = Array.isArray(car.features)
+                  ? car.features
                   : JSON.parse(car.features || "[]");
               } catch (e) {
                 carFeatures = typeof car.features === 'string' ? car.features.split(',') : [];
@@ -453,7 +449,7 @@ export default function Home() {
                   key={car.id}
                   className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-premium group hover:shadow-xl transition-all duration-300 flex flex-col"
                 >
-                  
+
                   {/* Photo area */}
                   <div className="relative h-48 overflow-hidden bg-slate-100">
                     <img
@@ -508,7 +504,7 @@ export default function Home() {
 
       {/* 3. Why Choose Us Section */}
       <div id="why-us" className="bg-slate-900 py-20 text-white scroll-mt-20 relative overflow-hidden">
-        
+
         {/* Visual premium background nodes */}
         <div className="absolute top-1/4 left-1/10 w-96 h-96 bg-brand-red/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 right-1/10 w-96 h-96 bg-red-800/10 rounded-full blur-3xl"></div>

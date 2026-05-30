@@ -6,25 +6,34 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { API_BASE_URL } from '../context/AuthContext';
 import { normalizeImages } from '../utils/imageHelper';
-import { 
-  LayoutDashboard, 
-  Car, 
-  RefreshCw, 
-  Plus, 
-  Edit, 
-  Trash2, 
-  CheckCircle2, 
-  Mail, 
-  Upload, 
-  Calendar, 
-  MapPin, 
-  User, 
-  Phone, 
+import {
+  LayoutDashboard,
+  Car,
+  RefreshCw,
+  Plus,
+  Edit,
+  Trash2,
+  CheckCircle2,
+  Mail,
+  Upload,
+  Calendar,
+  MapPin,
+  User,
+  Phone,
   SlidersHorizontal,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
 import OTPInput from '../components/OTPInput';
+
+// Feature options organized by category for the vehicle form chip selector
+const FEATURES_OPTIONS = [
+  { label: 'Transmission', icon: '⚙️', options: ['Manuelle', 'Automatique'] },
+  { label: 'Carburant', icon: '⛽', options: ['Essence', 'Diesel'] },
+  { label: 'Confort', icon: '❄️', options: ['Climatisation'] },
+  { label: 'Capacité', icon: '👥', options: ['2 Places', '4 Places', '5 Places', '7 Places', '8 Places', '9 Places'] },
+
+];
 
 function AdminCarCard({ car, startEditCar, handleDeleteCar }) {
   const [activeImgIndex, setActiveImgIndex] = useState(0);
@@ -50,14 +59,14 @@ function AdminCarCard({ car, startEditCar, handleDeleteCar }) {
         />
         {images.length > 1 && (
           <>
-            <button 
+            <button
               type="button"
               onClick={handlePrevImage}
               className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-slate-800 p-1 rounded-full z-20 shadow backdrop-blur-sm transition-all"
             >
               <ChevronLeft size={14} />
             </button>
-            <button 
+            <button
               type="button"
               onClick={handleNextImage}
               className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-slate-800 p-1 rounded-full z-20 shadow backdrop-blur-sm transition-all"
@@ -66,11 +75,10 @@ function AdminCarCard({ car, startEditCar, handleDeleteCar }) {
             </button>
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-20">
               {images.map((_, idx) => (
-                <div 
-                  key={idx} 
-                  className={`h-1 w-1 rounded-full transition-all ${
-                    idx === activeImgIndex ? 'bg-brand-red w-2.5' : 'bg-slate-300'
-                  }`}
+                <div
+                  key={idx}
+                  className={`h-1 w-1 rounded-full transition-all ${idx === activeImgIndex ? 'bg-brand-red w-2.5' : 'bg-slate-300'
+                    }`}
                 />
               ))}
             </div>
@@ -105,7 +113,7 @@ function AdminCarCard({ car, startEditCar, handleDeleteCar }) {
 
 export default function AdminDashboard() {
   const { user, token } = useAuth();
-  
+
   // Dashboard Sub-Section views
   const [activeTab, setActiveTab] = useState('stats'); // 'stats' | 'bookings' | 'fleet' | 'messages' | 'settings'
 
@@ -119,7 +127,7 @@ export default function AdminDashboard() {
   const [bookings, setBookings] = useState([]);
   const [fleet, setFleet] = useState([]);
   const [messages, setMessages] = useState([]);
-  
+
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [uploadingFiles, setUploadingFiles] = useState(false);
@@ -136,7 +144,7 @@ export default function AdminDashboard() {
     pricePerWeek: 0,
     pricePerMonth: 0,
     imageUrl: '',
-    features: 'Climatisation, Manuelle, Essence, 5 Places'
+    features: ['Climatisation', 'Manuelle', 'Essence', '5 Places']
   });
   const [editingCarId, setEditingCarId] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -278,10 +286,8 @@ export default function AdminDashboard() {
     formData.append('pricePerMonth', carForm.pricePerMonth || 0);
     formData.append('imageUrl', carForm.imageUrl || '');
 
-    // Format features array as stringified JSON so the backend parser handles it
-    const formattedFeatures = carForm.features
-      ? carForm.features.split(',').map(f => f.trim()).filter(Boolean)
-      : [];
+    // Features is already an array — stringify for backend
+    const formattedFeatures = Array.isArray(carForm.features) ? carForm.features.filter(Boolean) : [];
     formData.append('features', JSON.stringify(formattedFeatures));
 
     // Append all selected image files under the 'images' key
@@ -310,7 +316,7 @@ export default function AdminDashboard() {
           pricePerWeek: 0,
           pricePerMonth: 0,
           imageUrl: '',
-          features: 'Climatisation, Manuelle, Essence, 5 Places'
+          features: ['Climatisation', 'Manuelle', 'Essence', '5 Places']
         });
         setSelectedFiles([]);
         setEditingCarId(null);
@@ -329,24 +335,24 @@ export default function AdminDashboard() {
   const startEditCar = (car) => {
     setEditingCarId(car.id);
     setSelectedFiles([]);
-    let featuresStr = '';
+    let featuresArr = [];
     if (car.features) {
       if (Array.isArray(car.features)) {
-        featuresStr = car.features.join(', ');
+        featuresArr = car.features;
       } else if (typeof car.features === 'string') {
         try {
           const parsed = JSON.parse(car.features);
           if (Array.isArray(parsed)) {
-            featuresStr = parsed.join(', ');
+            featuresArr = parsed;
           } else {
-            featuresStr = car.features;
+            featuresArr = car.features.split(',').map(f => f.trim()).filter(Boolean);
           }
         } catch (e) {
-          featuresStr = car.features;
+          featuresArr = car.features.split(',').map(f => f.trim()).filter(Boolean);
         }
       }
     }
-    
+
     setCarForm({
       brand: car.brand || '',
       model: car.model || '',
@@ -355,7 +361,7 @@ export default function AdminDashboard() {
       pricePerWeek: car.pricePerWeek || 0,
       pricePerMonth: car.pricePerMonth || 0,
       imageUrl: car.imageUrl || '',
-      features: featuresStr
+      features: featuresArr
     });
     setShowCarModal(true);
   };
@@ -442,6 +448,15 @@ export default function AdminDashboard() {
     }
   };
 
+  const toggleFeature = (feature) => {
+    setCarForm(prev => ({
+      ...prev,
+      features: prev.features.includes(feature)
+        ? prev.features.filter(f => f !== feature)
+        : [...prev.features, feature]
+    }));
+  };
+
   const getFirstCarImage = (imageUrlString) => {
     return normalizeImages(imageUrlString)[0];
   };
@@ -449,7 +464,7 @@ export default function AdminDashboard() {
   return (
     <div className="py-10 bg-slate-50 min-h-screen text-left font-admin">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        
+
         {/* Header Branding */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
           <div>
@@ -458,7 +473,7 @@ export default function AdminDashboard() {
               Espace d'Administration • Marrakech, Maroc
             </p>
           </div>
-          
+
           <button
             onClick={handleRefresh}
             disabled={actionLoading || loading}
@@ -485,18 +500,16 @@ export default function AdminDashboard() {
         <div className="flex flex-wrap bg-white p-1.5 border border-slate-100 rounded-2xl shadow-sm gap-1">
           <button
             onClick={() => setActiveTab('stats')}
-            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all ${
-              activeTab === 'stats' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
-            }`}
+            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all ${activeTab === 'stats' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
+              }`}
           >
             <LayoutDashboard size={14} />
             Vue d'ensemble
           </button>
           <button
             onClick={() => setActiveTab('bookings')}
-            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all relative ${
-              activeTab === 'bookings' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
-            }`}
+            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all relative ${activeTab === 'bookings' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
+              }`}
           >
             <Calendar size={14} />
             Réservations Inscrits
@@ -508,27 +521,24 @@ export default function AdminDashboard() {
           </button>
           <button
             onClick={() => setActiveTab('fleet')}
-            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all ${
-              activeTab === 'fleet' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
-            }`}
+            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all ${activeTab === 'fleet' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
+              }`}
           >
             <Car size={14} />
             Gestion Flotte
           </button>
           <button
             onClick={() => setActiveTab('messages')}
-            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all ${
-              activeTab === 'messages' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
-            }`}
+            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all ${activeTab === 'messages' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
+              }`}
           >
             <Mail size={14} />
             Messages Clients
           </button>
           <button
             onClick={() => setActiveTab('settings')}
-            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all ${
-              activeTab === 'settings' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
-            }`}
+            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all ${activeTab === 'settings' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
+              }`}
           >
             <SlidersHorizontal size={14} />
             Paramètres
@@ -543,13 +553,13 @@ export default function AdminDashboard() {
           </div>
         ) : (
           <div className="space-y-6">
-            
+
             {/* TAB 1: Analytics / stats summary */}
             {activeTab === 'stats' && (
               <div className="space-y-6">
                 {/* 3 cards stats widget */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                  
+
                   {/* Card Total Cars */}
                   <div className="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm flex items-center gap-4">
                     <div className="w-12 h-12 bg-blue-50 text-brand-blue rounded-xl flex items-center justify-center shrink-0">
@@ -604,7 +614,7 @@ export default function AdminDashboard() {
                   <h3 className="font-extrabold text-base text-slate-800">Inbox des Réservations</h3>
                   <span className="text-xs text-slate-400 font-bold">{bookings.length} demande(s) enregistrée(s)</span>
                 </div>
-                
+
                 {bookings.length === 0 ? (
                   <div className="py-20 text-center text-slate-400 font-semibold text-xs">
                     Aucune demande de réservation reçue pour le moment.
@@ -644,15 +654,14 @@ export default function AdminDashboard() {
                               </div>
                             </td>
                             <td className="py-4 px-5 text-center">
-                              <span className={`inline-block font-extrabold text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-lg border ${
-                                book.bookingStatus === 'pending'
+                              <span className={`inline-block font-extrabold text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-lg border ${book.bookingStatus === 'pending'
                                   ? 'bg-amber-50 text-amber-600 border-amber-200'
                                   : book.bookingStatus === 'contacted'
-                                  ? 'bg-blue-50 text-brand-blue border-blue-200'
-                                  : book.bookingStatus === 'confirmed'
-                                  ? 'bg-green-50 text-emerald-600 border-green-200'
-                                  : 'bg-red-50 text-brand-red border-red-200'
-                              }`}>
+                                    ? 'bg-blue-50 text-brand-blue border-blue-200'
+                                    : book.bookingStatus === 'confirmed'
+                                      ? 'bg-green-50 text-emerald-600 border-green-200'
+                                      : 'bg-red-50 text-brand-red border-red-200'
+                                }`}>
                                 {book.bookingStatus}
                               </span>
                             </td>
@@ -680,7 +689,7 @@ export default function AdminDashboard() {
             {/* TAB 3: Fleet Management CRUD */}
             {activeTab === 'fleet' && (
               <div className="space-y-6">
-                
+
                 {/* Fleet action bar */}
                 <div className="bg-white p-5 border border-slate-100 rounded-2xl shadow-sm flex justify-between items-center">
                   <h3 className="font-extrabold text-base text-slate-800">Gestion de la Flotte</h3>
@@ -696,7 +705,7 @@ export default function AdminDashboard() {
                         pricePerWeek: 0,
                         pricePerMonth: 0,
                         imageUrl: '',
-                        features: 'Climatisation, Manuelle, Essence, 5 Places'
+                        features: ['Climatisation', 'Manuelle', 'Essence', '5 Places']
                       });
                       setShowCarModal(true);
                     }}
@@ -715,11 +724,11 @@ export default function AdminDashboard() {
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {fleet.map(car => (
-                      <AdminCarCard 
-                        key={car.id} 
-                        car={car} 
-                        startEditCar={startEditCar} 
-                        handleDeleteCar={handleDeleteCar} 
+                      <AdminCarCard
+                        key={car.id}
+                        car={car}
+                        startEditCar={startEditCar}
+                        handleDeleteCar={handleDeleteCar}
                       />
                     ))}
                   </div>
@@ -784,7 +793,7 @@ export default function AdminDashboard() {
             {activeTab === 'settings' && (
               <div className="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm space-y-6">
                 <h3 className="font-extrabold text-base text-slate-800 border-b border-slate-50 pb-3">Paramètres du Compte</h3>
-                
+
                 <div className="max-w-md">
                   <h4 className="text-sm font-bold text-slate-900 mb-4">Changer l'adresse E-mail</h4>
                   {emailChangeStep === 0 && (
@@ -824,7 +833,7 @@ export default function AdminDashboard() {
         {showCarModal && (
           <div className="fixed inset-0 bg-slate-950/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl relative space-y-6">
-              
+
               <div className="border-b border-slate-50 pb-3">
                 <h3 className="font-black text-slate-900 text-lg">
                   {editingCarId ? 'Modifier le Véhicule' : 'Ajouter un Véhicule'}
@@ -835,7 +844,7 @@ export default function AdminDashboard() {
               </div>
 
               <form onSubmit={handleCarSubmit} className="space-y-4">
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1.5">Marque</label>
@@ -848,7 +857,7 @@ export default function AdminDashboard() {
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-3 text-xs font-semibold focus:outline-none focus:border-brand-blue"
                     />
                   </div>
-                  
+
                   <div>
                     <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1.5">Modèle</label>
                     <input
@@ -863,22 +872,50 @@ export default function AdminDashboard() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1.5">Éléments Techniques (séparés par virgules)</label>
-                  <input
-                    type="text"
-                    value={carForm.features}
-                    onChange={(e) => setCarForm(prev => ({ ...prev, features: e.target.value }))}
-                    required
-                    placeholder="Climatisation, Manuelle, Essence, 5 Places"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-3 text-xs font-semibold focus:outline-none focus:border-brand-blue"
-                  />
+                  <label className="block text-[10px] font-bold uppercase text-slate-500 mb-2">
+                    Éléments Techniques
+                    {carForm.features.length > 0 && (
+                      <span className="ml-2 bg-brand-red text-white text-[9px] font-black px-2 py-0.5 rounded-full">
+                        {carForm.features.length} sélectionné(s)
+                      </span>
+                    )}
+                  </label>
+                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3">
+                    {FEATURES_OPTIONS.map(category => (
+                      <div key={category.label}>
+                        <p className="text-[9px] font-black uppercase text-slate-400 mb-1.5 tracking-wider">
+                          {category.icon} {category.label}
+                        </p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {category.options.map(opt => (
+                            <button
+                              key={opt}
+                              type="button"
+                              onClick={() => toggleFeature(opt)}
+                              className={`text-[10px] font-bold px-3 py-1 rounded-full border transition-all ${carForm.features.includes(opt)
+                                  ? 'bg-brand-red text-white border-brand-red shadow-sm'
+                                  : 'bg-white text-slate-600 border-slate-200 hover:border-brand-red hover:text-brand-red'
+                                }`}
+                            >
+                              {carForm.features.includes(opt) ? '✓ ' : ''}{opt}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                    {carForm.features.length === 0 && (
+                      <p className="text-[10px] text-slate-400 font-semibold text-center py-2">
+                        Sélectionnez au moins un élément technique
+                      </p>
+                    )}
+                  </div>
                 </div>
 
-                 {/* Upload Image using Multer direct */}
+                {/* Upload Image using Multer direct */}
                 <div className="border border-dashed border-slate-200 rounded-2xl p-4 bg-slate-50/50 flex flex-col items-center justify-center text-center gap-2">
                   <Upload size={24} className="text-slate-400" />
                   <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Images du Véhicule</span>
-                  
+
                   <input
                     type="file"
                     multiple
@@ -887,7 +924,7 @@ export default function AdminDashboard() {
                     className="hidden"
                     id="multer-upload-files"
                   />
-                  
+
                   <label
                     htmlFor="multer-upload-files"
                     className="bg-white border border-slate-200 hover:border-brand-blue rounded-lg py-1.5 px-3 font-semibold text-[10px] text-slate-700 cursor-pointer shadow-sm transition-all"
@@ -902,10 +939,10 @@ export default function AdminDashboard() {
                       </div>
                       <div className="flex gap-2 overflow-x-auto pb-2 justify-center">
                         {selectedFiles.map((file, idx) => (
-                          <img 
-                            key={idx} 
-                            src={URL.createObjectURL(file)} 
-                            alt="preview" 
+                          <img
+                            key={idx}
+                            src={URL.createObjectURL(file)}
+                            alt="preview"
                             className="h-16 w-16 object-cover rounded-lg border border-slate-200"
                           />
                         ))}
@@ -918,10 +955,10 @@ export default function AdminDashboard() {
                       </div>
                       <div className="flex gap-2 overflow-x-auto pb-2 justify-center">
                         {normalizeImages(carForm.imageUrl).map((url, idx) => (
-                          <img 
-                            key={idx} 
-                            src={url} 
-                            alt="preview" 
+                          <img
+                            key={idx}
+                            src={url}
+                            alt="preview"
                             className="h-16 w-16 object-cover rounded-lg border border-slate-200 opacity-80"
                           />
                         ))}
