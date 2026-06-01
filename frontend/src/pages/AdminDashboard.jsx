@@ -497,10 +497,10 @@ export default function AdminDashboard() {
         )}
 
         {/* Tab Navigation Menu */}
-        <div className="flex flex-wrap bg-white p-1.5 border border-slate-100 rounded-2xl shadow-sm gap-1">
+        <div className="flex overflow-x-auto bg-white p-1.5 border border-slate-100 rounded-2xl shadow-sm gap-1 no-scrollbar" style={{scrollbarWidth:'none', msOverflowStyle:'none'}}>
           <button
             onClick={() => setActiveTab('stats')}
-            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all ${activeTab === 'stats' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
+            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all shrink-0 whitespace-nowrap ${activeTab === 'stats' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
               }`}
           >
             <LayoutDashboard size={14} />
@@ -508,7 +508,7 @@ export default function AdminDashboard() {
           </button>
           <button
             onClick={() => setActiveTab('bookings')}
-            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all relative ${activeTab === 'bookings' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
+            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all relative shrink-0 whitespace-nowrap ${activeTab === 'bookings' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
               }`}
           >
             <Calendar size={14} />
@@ -521,7 +521,7 @@ export default function AdminDashboard() {
           </button>
           <button
             onClick={() => setActiveTab('fleet')}
-            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all ${activeTab === 'fleet' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
+            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all shrink-0 whitespace-nowrap ${activeTab === 'fleet' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
               }`}
           >
             <Car size={14} />
@@ -529,7 +529,7 @@ export default function AdminDashboard() {
           </button>
           <button
             onClick={() => setActiveTab('messages')}
-            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all ${activeTab === 'messages' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
+            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all shrink-0 whitespace-nowrap ${activeTab === 'messages' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
               }`}
           >
             <Mail size={14} />
@@ -537,7 +537,7 @@ export default function AdminDashboard() {
           </button>
           <button
             onClick={() => setActiveTab('settings')}
-            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all ${activeTab === 'settings' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
+            className={`flex items-center gap-2 py-3 px-5 text-xs font-extrabold rounded-xl transition-all shrink-0 whitespace-nowrap ${activeTab === 'settings' ? 'bg-brand-red text-white' : 'text-slate-600 hover:bg-slate-100'
               }`}
           >
             <SlidersHorizontal size={14} />
