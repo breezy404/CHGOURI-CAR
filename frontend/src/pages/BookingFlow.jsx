@@ -359,7 +359,7 @@ export default function BookingFlow() {
                 <img
                   src={getFirstCarImage(selectedCar.imageUrl)}
                   alt={selectedCar.brand}
-                  className="w-full h-40 object-cover rounded-xl bg-slate-50"
+                  className="w-full h-40 object-contain p-2 rounded-xl bg-slate-50"
                 />
                 
                 <div className="space-y-1">

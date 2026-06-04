@@ -60,7 +60,7 @@ function CarCard({ car, onReserve, t }) {
         <img 
           src={images[activeImgIndex]} 
           alt={`${car.brand} ${car.model}`} 
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102"
+          className="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-102"
         />
 
         {/* Carousel overlay selectors */}

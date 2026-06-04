@@ -455,7 +455,7 @@ export default function Home() {
                     <img
                       src={normalizeImages(car.imageUrl)[0]}
                       alt={`${car.brand} ${car.model}`}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
                     <span className="absolute top-4 left-4 bg-brand-dark/95 text-white font-bold text-[10px] px-2.5 py-1 rounded-md uppercase tracking-wider">
