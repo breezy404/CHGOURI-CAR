@@ -85,7 +85,7 @@ export default function Home() {
         {/* Background Image Overlay with brand styling */}
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1539650116574-8efeb43e2750?auto=format&fit=crop&q=80&w=1920"
+            src="/marrakech_bg.png"
             alt="Marrakech road scenic"
             className="w-full h-full object-cover object-center opacity-30 scale-105 transition-transform duration-10000 ease-out"
           />
