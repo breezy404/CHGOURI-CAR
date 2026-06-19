@@ -33,7 +33,9 @@ function CarCard({ car, onReserve, t }) {
       }
       return car.features || [];
     } catch (e) {
-      return [];
+      return typeof car.features === 'string'
+        ? car.features.split(',').map(f => f.trim()).filter(Boolean)
+        : [];
     }
   };
 

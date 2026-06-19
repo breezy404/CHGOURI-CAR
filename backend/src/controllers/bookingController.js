@@ -58,17 +58,23 @@ exports.createBooking = async (req, res) => {
 
     // Fetch the booking with associated Car for the email
     const bookingWithCar = await Booking.findByPk(booking.id, { include: ['car'] });
+    
+    // Convert to plain JSON and attach totalAmount which is calculated but not persisted in the database table
+    const bookingData = {
+      ...bookingWithCar.toJSON(),
+      totalAmount
+    };
 
     // Send the email asynchronously
     const emailService = require('../services/emailService');
     
     // Email to Client
-    emailService.sendBookingRequestEmail(bookingWithCar, days).catch(err => {
+    emailService.sendBookingRequestEmail(bookingData, days).catch(err => {
       console.error('Failed to send booking request email to client:', err);
     });
 
     // Email to Admin
-    emailService.sendAdminNewBookingEmail(bookingWithCar, days).catch(err => {
+    emailService.sendAdminNewBookingEmail(bookingData, days).catch(err => {
       console.error('Failed to send booking notification to admin:', err);
     });
 

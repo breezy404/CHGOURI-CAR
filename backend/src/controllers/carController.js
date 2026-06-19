@@ -1,7 +1,7 @@
 // Car Fleet Controller (List, Details, Admin CRUD)
 // CHGOURI CAR Marrakech Car Rental
 
-const { Car, AvailabilityCalendar } = require('../models');
+const { Car, Booking } = require('../models');
 const { Op } = require('sequelize');
 
 /**
@@ -25,23 +25,24 @@ exports.getAllCars = async (req, res) => {
     }
 
     // 2. Real-Time Availability date filtering
-    // If startDate and endDate are provided, we filter out cars that have any 'booked' or 'maintenance' lock during this range.
+    // If startDate and endDate are provided, we filter out cars that have any overlapping active bookings.
     if (startDate && endDate) {
       // Find all car IDs that are occupied
-      const occupiedLocks = await AvailabilityCalendar.findAll({
+      const occupiedBookings = await Booking.findAll({
         attributes: ['carId'],
         where: {
-          date: {
-            [Op.between]: [startDate, endDate]
-          },
-          status: {
-            [Op.in]: ['booked', 'maintenance']
+          [Op.and]: [
+            { pickupDate: { [Op.lte]: endDate } },
+            { returnDate: { [Op.gte]: startDate } }
+          ],
+          bookingStatus: {
+            [Op.in]: ['pending', 'contacted', 'confirmed']
           }
         },
         raw: true
       });
 
-      const occupiedCarIds = occupiedLocks.map(lock => lock.carId);
+      const occupiedCarIds = occupiedBookings.map(b => b.carId);
 
       if (occupiedCarIds.length > 0) {
         queryOptions.where.id = {

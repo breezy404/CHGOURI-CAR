@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useLanguage } from '../context/LanguageContext';
-import { Calendar, MapPin, Sparkles, Shield, Compass, ChevronDown, Check, CheckCircle2, Award } from 'lucide-react';
+import { Calendar, MapPin, Sparkles, Shield, Compass, ChevronDown, Check, CheckCircle2, Award, Car, Wrench, DollarSign, Clock } from 'lucide-react';
 import { API_BASE_URL } from '../context/AuthContext';
 import { normalizeImages } from '../utils/imageHelper';
 
@@ -75,6 +75,33 @@ export default function Home() {
       q: "Puis-je annuler ma réservation gratuitement ?",
       a: "Oui, l'annulation de votre réservation est entièrement gratuite jusqu'à 48 heures avant l'heure prévue de prise en charge du véhicule. Vous serez intégralement remboursé de l'acompte versé."
     }
+  ];
+
+  const whyUsItems = [
+    {
+      num: "01",
+      title: t('why1Title'),
+      desc: t('why1Desc'),
+      icon: <Car className="text-brand-red" size={24} />,
+    },
+    {
+      num: "02",
+      title: t('why2Title'),
+      desc: t('why2Desc'),
+      icon: <Wrench className="text-brand-red" size={24} />,
+    },
+    {
+      num: "03",
+      title: t('why3Title'),
+      desc: t('why3Desc'),
+      icon: <DollarSign className="text-brand-red" size={24} />,
+    },
+    {
+      num: "04",
+      title: t('why4Title'),
+      desc: t('why4Desc'),
+      icon: <Clock className="text-brand-red" size={24} />,
+    },
   ];
 
   return (
@@ -416,6 +443,72 @@ export default function Home() {
         </div>
       </div>
 
+      {/* 1.8 Redesigned Why Choose Us Section */}
+      <div id="why-us" className="bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 py-20 text-white scroll-mt-20 relative overflow-hidden">
+        {/* Visual premium background nodes */}
+        <div className="absolute top-1/4 left-1/10 w-96 h-96 bg-brand-red/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/10 w-96 h-96 bg-red-800/10 rounded-full blur-3xl"></div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Left side: Accent, Title, Subtitle, and Car Image */}
+            <div className="lg:col-span-5 space-y-6 text-left relative">
+              <div className="inline-flex items-center gap-1.5 bg-brand-red/10 border border-brand-red/20 rounded-full px-4 py-1.5 text-brand-red text-xs font-semibold uppercase tracking-wider mb-2">
+                <Sparkles size={12} />
+                <span>Pourquoi nous choisir ?</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
+                {t('whyTitle')}
+              </h2>
+              <p className="text-slate-400 text-sm leading-relaxed max-w-lg">
+                {t('whySubtitle')}
+              </p>
+              
+              {/* Sleek Car graphic overlay */}
+              <div className="relative flex justify-center items-center pt-8 select-none pointer-events-none">
+                <div className="absolute w-64 h-64 bg-brand-red/15 rounded-full blur-3xl"></div>
+                <img
+                  src="/why_us_car.png"
+                  alt="Premium Rental Car CHGOURI CAR"
+                  className="w-full max-w-[340px] h-auto object-contain relative z-10 transform scale-110 drop-shadow-[0_20px_20px_rgba(239,68,68,0.25)] hover:scale-115 transition-transform duration-500"
+                />
+              </div>
+            </div>
+
+            {/* Right side: 2x2 grid of benefits */}
+            <div className="lg:col-span-7">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {whyUsItems.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-slate-800/40 border border-slate-800 hover:border-brand-red/30 rounded-2xl p-6 relative overflow-hidden group hover:translate-y-[-4px] transition-all duration-300"
+                  >
+                    {/* Background Number */}
+                    <div className="absolute top-2 right-4 text-6xl font-black text-slate-700/10 select-none group-hover:text-brand-red/5 group-hover:scale-105 transition-all duration-300">
+                      {item.num}
+                    </div>
+
+                    <div className="space-y-4 relative z-10 text-left">
+                      <div className="w-12 h-12 rounded-xl bg-brand-red/10 flex items-center justify-center">
+                        {item.icon}
+                      </div>
+                      <h3 className="font-extrabold text-lg text-white group-hover:text-brand-red transition-colors">
+                        {item.title}
+                      </h3>
+                      <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
       {/* 2. Economy Car Fleet List */}
       <div id="fleet" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-20">
         <div className="text-center space-y-3 mb-16">
@@ -502,53 +595,7 @@ export default function Home() {
         )}
       </div>
 
-      {/* 3. Why Choose Us Section */}
-      <div id="why-us" className="bg-slate-900 py-20 text-white scroll-mt-20 relative overflow-hidden">
 
-        {/* Visual premium background nodes */}
-        <div className="absolute top-1/4 left-1/10 w-96 h-96 bg-brand-red/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/10 w-96 h-96 bg-red-800/10 rounded-full blur-3xl"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center space-y-3 mb-16">
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-              {t('whyTitle')}
-            </h2>
-            <p className="text-slate-400 max-w-xl mx-auto text-sm">
-              {t('whySubtitle')}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {/* Box 1 */}
-            <div className="bg-slate-800/50 border border-slate-800 rounded-2xl p-8 space-y-4 hover:border-brand-red/30 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-brand-red/10 flex items-center justify-center text-brand-red">
-                <Compass size={24} />
-              </div>
-              <h3 className="font-extrabold text-lg">{t('why1Title')}</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">{t('why1Desc')}</p>
-            </div>
-
-            {/* Box 2 */}
-            <div className="bg-slate-800/50 border border-slate-800 rounded-2xl p-8 space-y-4 hover:border-brand-red/30 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-brand-red/10 flex items-center justify-center text-brand-red">
-                <Shield size={24} />
-              </div>
-              <h3 className="font-extrabold text-lg">{t('why2Title')}</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">{t('why2Desc')}</p>
-            </div>
-
-            {/* Box 3 */}
-            <div className="bg-slate-800/50 border border-slate-800 rounded-2xl p-8 space-y-4 hover:border-brand-red/30 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-brand-red/10 flex items-center justify-center text-brand-red">
-                <Sparkles size={24} />
-              </div>
-              <h3 className="font-extrabold text-lg">{t('why3Title')}</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">{t('why3Desc')}</p>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* 4. Interactive Accordion FAQ Section */}
       <div className="py-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

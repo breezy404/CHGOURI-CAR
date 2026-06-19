@@ -13,6 +13,22 @@ const SENDER_NAME = cleanEnv('SMTP_FROM_NAME', 'CHGOURI CAR Marrakech');
 const LOGO_URL = 'https://res.cloudinary.com/dvppe25pp/image/upload/v1779306384/chgouri-car/assets/logo.png';
 
 /**
+ * Helper to format YYYY-MM-DD string to DD/MM/YYYY
+ */
+const formatDateDMY = (dateStr) => {
+  if (!dateStr) return '';
+  const dateOnly = typeof dateStr === 'string' && dateStr.includes('T') ? dateStr.split('T')[0] : String(dateStr);
+  const clean = dateOnly.replace(/\//g, '-');
+  const parts = clean.split('-');
+  if (parts.length === 3) {
+    if (parts[0].length === 4) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+  }
+  return dateStr;
+};
+
+/**
  * Helper to send email via Brevo API
  */
 const sendBrevoEmail = async (to, subject, htmlContent, attachment = null) => {
@@ -150,7 +166,7 @@ exports.sendBookingConfirmationEmail = async (booking, pdfBuffer) => {
             </tr>
             <tr>
               <td style="padding: 8px 0; font-weight: 600; color: #64748b;">Date de Départ:</td>
-              <td style="padding: 8px 0; text-align: right;">${booking.pickupDate}</td>
+              <td style="padding: 8px 0; text-align: right;">${formatDateDMY(booking.pickupDate)}</td>
             </tr>
             <tr>
               <td style="padding: 8px 0; font-weight: 600; color: #64748b;">Lieu de Départ:</td>
@@ -158,7 +174,7 @@ exports.sendBookingConfirmationEmail = async (booking, pdfBuffer) => {
             </tr>
             <tr>
               <td style="padding: 8px 0; font-weight: 600; color: #64748b;">Date de Retour:</td>
-              <td style="padding: 8px 0; text-align: right;">${booking.returnDate}</td>
+              <td style="padding: 8px 0; text-align: right;">${formatDateDMY(booking.returnDate)}</td>
             </tr>
             <tr>
               <td style="padding: 8px 0; font-weight: 600; color: #64748b;">Lieu de Retour:</td>
@@ -263,11 +279,11 @@ exports.sendBookingRequestEmail = async (booking, days) => {
             </tr>
             <tr>
               <td style="padding: 10px 0; font-weight: 600; color: #64748b; border-bottom: 1px dashed #cbd5e1;">Date de Départ:</td>
-              <td style="padding: 10px 0; text-align: right; border-bottom: 1px dashed #cbd5e1; font-weight: bold;">${booking.pickupDate}</td>
+              <td style="padding: 10px 0; text-align: right; border-bottom: 1px dashed #cbd5e1; font-weight: bold;">${formatDateDMY(booking.pickupDate)}</td>
             </tr>
             <tr>
               <td style="padding: 10px 0; font-weight: 600; color: #64748b; border-bottom: 1px dashed #cbd5e1;">Date de Retour:</td>
-              <td style="padding: 10px 0; text-align: right; border-bottom: 1px dashed #cbd5e1; font-weight: bold;">${booking.returnDate}</td>
+              <td style="padding: 10px 0; text-align: right; border-bottom: 1px dashed #cbd5e1; font-weight: bold;">${formatDateDMY(booking.returnDate)}</td>
             </tr>
             <tr>
               <td style="padding: 10px 0; font-weight: 600; color: #64748b; border-bottom: 1px dashed #cbd5e1;">Durée:</td>
@@ -332,7 +348,7 @@ exports.sendAdminNewBookingEmail = async (booking, days) => {
           </tr>
           <tr>
             <td style="padding: 10px; font-weight: 600; background: #f8fafc; border: 1px solid #e2e8f0;">Dates</td>
-            <td style="padding: 10px; border: 1px solid #e2e8f0;">Du ${booking.pickupDate} au ${booking.returnDate} (${days} jours)</td>
+            <td style="padding: 10px; border: 1px solid #e2e8f0;">Du ${formatDateDMY(booking.pickupDate)} au ${formatDateDMY(booking.returnDate)} (${days} jours)</td>
           </tr>
           <tr>
             <td style="padding: 10px; font-weight: 600; background: #f8fafc; border: 1px solid #e2e8f0;">Prise en charge</td>
@@ -399,7 +415,7 @@ exports.sendStatusUpdateEmail = async (booking, newStatus) => {
         <div style="background-color: #f8fafc; border-radius: 8px; padding: 20px; margin: 20px 0; border: 1px solid #e2e8f0;">
           <h3 style="margin-top: 0; color: #0f172a; font-size: 16px; font-weight: 800; border-bottom: 1px solid #cbd5e1; padding-bottom: 10px;">RAPPEL DE VOTRE COMMANDE #${booking.id}</h3>
           <p style="margin: 5px 0;"><strong>Véhicule :</strong> ${carName}</p>
-          <p style="margin: 5px 0;"><strong>Dates :</strong> Du ${booking.pickupDate} au ${booking.returnDate}</p>
+          <p style="margin: 5px 0;"><strong>Dates :</strong> Du ${formatDateDMY(booking.pickupDate)} au ${formatDateDMY(booking.returnDate)}</p>
           <p style="margin: 5px 0;"><strong>Prise en charge :</strong> ${booking.pickupLocation}</p>
           <p style="margin: 5px 0;"><strong>Récupération :</strong> ${booking.returnLocation}</p>
         </div>

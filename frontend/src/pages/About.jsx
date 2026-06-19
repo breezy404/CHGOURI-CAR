@@ -26,29 +26,29 @@ export default function About() {
     }
   ];
 
-  // const circuits = [
-  //   {
-  //     title: t('circuitMarrakechTitle'),
-  //     desc: t('circuitMarrakechDesc'),
-  //     icon: <Landmark size={20} className="text-white" />,
-  //     image: "https://images.unsplash.com/photo-1597212618440-806262de4fe6?auto=format&fit=crop&q=80&w=800",
-  //     whatsappUrl: "https://wa.me/212661901873?text=Bonjour,%20je%20souhaite%20réserver%20le%20circuit%20Marrakech%20City%20Tour."
-  //   },
-  //   {
-  //     title: t('circuitDesertTitle'),
-  //     desc: t('circuitDesertDesc'),
-  //     icon: <Compass size={20} className="text-white" />,
-  //     image: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&q=80&w=800",
-  //     whatsappUrl: "https://wa.me/212661901873?text=Bonjour,%20je%20souhaite%20réserver%20le%20circuit%20Excursion%20Désert."
-  //   },
-  //   {
-  //     title: t('circuitAtlasTitle'),
-  //     desc: t('circuitAtlasDesc'),
-  //     icon: <Mountain size={20} className="text-white" />,
-  //     image: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&q=80&w=800",
-  //     whatsappUrl: "https://wa.me/212661901873?text=Bonjour,%20je%20souhaite%20réserver%20le%20circuit%20Aventure%20dans%20l%27Atlas."
-  //   }
-  // ];
+  const circuits = [
+    {
+      title: t('circuitMarrakechTitle'),
+      desc: t('circuitMarrakechDesc'),
+      icon: <Landmark size={20} className="text-white" />,
+      image: "https://images.unsplash.com/photo-1597212618440-806262de4fe6?auto=format&fit=crop&q=80&w=800",
+      whatsappUrl: "https://wa.me/212661901873?text=Bonjour,%20je%20souhaite%20réserver%20le%20circuit%20Marrakech%20City%20Tour."
+    },
+    {
+      title: t('circuitDesertTitle'),
+      desc: t('circuitDesertDesc'),
+      icon: <Compass size={20} className="text-white" />,
+      image: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&q=80&w=800",
+      whatsappUrl: "https://wa.me/212661901873?text=Bonjour,%20je%20souhaite%20réserver%20le%20circuit%20Excursion%20Désert."
+    },
+    {
+      title: t('circuitAtlasTitle'),
+      desc: t('circuitAtlasDesc'),
+      icon: <Mountain size={20} className="text-white" />,
+      image: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&q=80&w=800",
+      whatsappUrl: "https://wa.me/212661901873?text=Bonjour,%20je%20souhaite%20réserver%20le%20circuit%20Aventure%20dans%20l%27Atlas."
+    }
+  ];
 
   return (
     <div className="bg-slate-50 min-h-screen py-12 md:py-20 text-left">
@@ -151,7 +151,7 @@ export default function About() {
           </div>
 
           {/* Cards Grid */}
-          {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-6">
             {circuits.map((c, idx) => (
               <div key={idx} className="bg-white rounded-3xl overflow-hidden shadow-premium border border-slate-100 flex flex-col justify-between hover:shadow-xl transition-all group">
                 <div className="relative h-48 overflow-hidden">
@@ -188,7 +188,7 @@ export default function About() {
                 </div>
               </div>
             ))}
-          </div> */}
+          </div>
         </div>
 
       </div>

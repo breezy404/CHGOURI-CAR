@@ -9,10 +9,27 @@ import { useLanguage } from '../context/LanguageContext';
 import { API_BASE_URL } from '../context/AuthContext';
 import { normalizeImages } from '../utils/imageHelper';
 
+// Helper to format YYYY-MM-DD string to DD/MM/YYYY
+const formatDateDMY = (dateStr) => {
+  if (!dateStr) return '';
+  const dateOnly = typeof dateStr === 'string' && dateStr.includes('T') ? dateStr.split('T')[0] : String(dateStr);
+  const clean = dateOnly.replace(/\//g, '-');
+  const parts = clean.split('-');
+  if (parts.length === 3) {
+    if (parts[0].length === 4) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+  }
+  return dateStr;
+};
+
 export default function BookingFlow() {
   const { t } = useLanguage();
   const [searchParams] = useSearchParams();
   const urlCarId = searchParams.get('carId');
+  const urlPickupDate = searchParams.get('pickupDate');
+  const urlReturnDate = searchParams.get('returnDate');
+  const urlPickupLocation = searchParams.get('pickupLocation');
 
   // Form Fields
   const [formData, setFormData] = useState({
@@ -20,10 +37,10 @@ export default function BookingFlow() {
     customerName: '',
     customerPhone: '+212 ',
     customerEmail: '',
-    pickupDate: '',
-    returnDate: '',
-    pickupLocation: '',
-    returnLocation: ''
+    pickupDate: urlPickupDate || '',
+    returnDate: urlReturnDate || '',
+    pickupLocation: urlPickupLocation || '',
+    returnLocation: urlPickupLocation || ''
   });
 
   // State Management
@@ -115,7 +132,7 @@ export default function BookingFlow() {
   // Generate dynamic WhatsApp message link for this booking
   const getWhatsAppLink = () => {
     const carName = selectedCar ? `${selectedCar.brand} ${selectedCar.model}` : 'Voiture';
-    const datesStr = formData.pickupDate && formData.returnDate ? `${formData.pickupDate} au ${formData.returnDate}` : 'dates flexibles';
+    const datesStr = formData.pickupDate && formData.returnDate ? `${formatDateDMY(formData.pickupDate)} au ${formatDateDMY(formData.returnDate)}` : 'dates flexibles';
     const text = `Bonjour, je veux réserver cette voiture:\nCar: ${carName}\nDates: ${datesStr}\nLocation: Marrakech`;
     return `https://wa.me/212661901873?text=${encodeURIComponent(text)}`;
   };
@@ -143,8 +160,8 @@ export default function BookingFlow() {
           <div className="bg-slate-50 rounded-xl p-4 border border-slate-100 text-left text-xs space-y-2 text-slate-600">
             <div><span className="font-bold">Client :</span> {formData.customerName}</div>
             <div><span className="font-bold">Véhicule :</span> {selectedCar ? `${selectedCar.brand} ${selectedCar.model}` : 'Voiture'}</div>
-            <div><span className="font-bold">Départ :</span> {formData.pickupDate}</div>
-            <div><span className="font-bold">Retour :</span> {formData.returnDate}</div>
+            <div><span className="font-bold">Départ :</span> {formatDateDMY(formData.pickupDate)}</div>
+            <div><span className="font-bold">Retour :</span> {formatDateDMY(formData.returnDate)}</div>
             <div><span className="font-bold">Lieu de livraison :</span> {formData.pickupLocation}</div>
             <div><span className="font-bold">Lieu de récupération :</span> {formData.returnLocation}</div>
           </div>

@@ -26,6 +26,20 @@ import {
 } from 'lucide-react';
 import OTPInput from '../components/OTPInput';
 
+// Helper to format YYYY-MM-DD string to DD/MM/YYYY
+const formatDateDMY = (dateStr) => {
+  if (!dateStr) return '';
+  const dateOnly = typeof dateStr === 'string' && dateStr.includes('T') ? dateStr.split('T')[0] : String(dateStr);
+  const clean = dateOnly.replace(/\//g, '-');
+  const parts = clean.split('-');
+  if (parts.length === 3) {
+    if (parts[0].length === 4) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+  }
+  return dateStr;
+};
+
 // Feature options organized by category for the vehicle form chip selector
 const FEATURES_OPTIONS = [
   { label: 'Transmission', icon: '⚙️', options: ['Manuelle', 'Automatique'] },
@@ -449,12 +463,25 @@ export default function AdminDashboard() {
   };
 
   const toggleFeature = (feature) => {
-    setCarForm(prev => ({
-      ...prev,
-      features: prev.features.includes(feature)
-        ? prev.features.filter(f => f !== feature)
-        : [...prev.features, feature]
-    }));
+    const category = FEATURES_OPTIONS.find(cat => cat.options.includes(feature));
+    if (!category) return;
+
+    setCarForm(prev => {
+      let nextFeatures = [...prev.features];
+      if (category.options.length === 1) {
+        // Toggle confort (Climatisation)
+        if (nextFeatures.includes(feature)) {
+          nextFeatures = nextFeatures.filter(f => f !== feature);
+        } else {
+          nextFeatures.push(feature);
+        }
+      } else {
+        // Mutually exclusive: Transmission, Fuel, Capacity
+        nextFeatures = nextFeatures.filter(f => !category.options.includes(f));
+        nextFeatures.push(feature);
+      }
+      return { ...prev, features: nextFeatures };
+    });
   };
 
   const getFirstCarImage = (imageUrlString) => {
@@ -647,7 +674,7 @@ export default function AdminDashboard() {
                               {book.car ? `${book.car.brand} ${book.car.model}` : 'Véhicule supprimé'}
                             </td>
                             <td className="py-4 px-5 space-y-1">
-                              <div className="font-extrabold text-slate-800">{book.pickupDate} au {book.returnDate}</div>
+                              <div className="font-extrabold text-slate-800">{formatDateDMY(book.pickupDate)} au {formatDateDMY(book.returnDate)}</div>
                               <div className="text-slate-400 font-semibold flex flex-col gap-1 mt-1 text-[10px]">
                                 <span className="flex items-center gap-1"><MapPin size={10} /> Livr: {book.pickupLocation}</span>
                                 <span className="flex items-center gap-1"><MapPin size={10} /> Récup: {book.returnLocation || book.pickupLocation}</span>
@@ -870,6 +897,8 @@ export default function AdminDashboard() {
                     />
                   </div>
                 </div>
+
+
 
                 <div>
                   <label className="block text-[10px] font-bold uppercase text-slate-500 mb-2">
