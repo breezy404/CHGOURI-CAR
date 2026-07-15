@@ -71,6 +71,8 @@ async function initializeDatabase() {
         password_hash VARCHAR(255) NOT NULL,
         phone VARCHAR(50) NOT NULL,
         role VARCHAR(50) DEFAULT 'admin',
+        otp_code VARCHAR(255) NULL,
+        otp_expires TIMESTAMP NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         INDEX idx_user_email (email)
