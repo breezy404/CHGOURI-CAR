@@ -1,5 +1,5 @@
-// API base URL — Railway in production, localhost in dev
-const RAILWAY_API_ROOT = 'https://chgouri-car-production.up.railway.app';
+// API base URL — Render in production, localhost in dev
+const RENDER_API_ROOT = 'https://chgouri-car-backend.onrender.com';
 
 function normalizeApiBaseUrl(url) {
   const trimmed = url.replace(/\/+$/, '');
@@ -13,7 +13,7 @@ const fromEnv = import.meta.env.VITE_API_URL
 export const API_BASE_URL =
   fromEnv ||
   (import.meta.env.PROD
-    ? `${RAILWAY_API_ROOT}/api`
+    ? `${RENDER_API_ROOT}/api`
     : 'http://localhost:5000/api');
 
 /** Root URL for /uploads images (no /api suffix) */

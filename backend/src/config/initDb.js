@@ -19,6 +19,12 @@ const connectionConfig = {
   multipleStatements: true
 };
 
+if (db.host !== 'localhost' && db.host !== '127.0.0.1') {
+  connectionConfig.ssl = {
+    rejectUnauthorized: false
+  };
+}
+
 // Sleep helper
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
