@@ -69,6 +69,16 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Temporary diagnostic endpoint
+app.get('/api/diag', (req, res) => {
+  res.status(200).json({
+    brevoKeyPresent: Boolean(process.env.BREVO_API_KEY),
+    brevoKeyLength: process.env.BREVO_API_KEY ? process.env.BREVO_API_KEY.length : 0,
+    senderEmail: process.env.SMTP_FROM_EMAIL || 'missing',
+    databaseUrlPresent: Boolean(process.env.MYSQL_URL)
+  });
+});
+
 // Serve uploaded images statically
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
