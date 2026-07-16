@@ -289,10 +289,6 @@ exports.sendBookingRequestEmail = async (booking, days) => {
               <td style="padding: 10px 0; font-weight: 600; color: #64748b; border-bottom: 1px dashed #cbd5e1;">Durée:</td>
               <td style="padding: 10px 0; text-align: right; border-bottom: 1px dashed #cbd5e1; font-weight: bold;">${days} jour(s)</td>
             </tr>
-            <tr>
-              <td style="padding: 15px 0 5px 0; font-weight: 800; color: #0f172a; font-size: 18px;">Total Estimé:</td>
-              <td style="padding: 15px 0 5px 0; text-align: right; font-weight: 900; color: #ee3942; font-size: 20px;">${totalAmount}</td>
-            </tr>
           </table>
         </div>
 
